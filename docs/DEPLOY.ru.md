@@ -1,10 +1,10 @@
 <div align="center">
 
-# WebToApp — Руководство по развёртыванию
+# All2App — Руководство по развёртыванию
 
 [English](DEPLOY.md) · [简体中文](DEPLOY.zh.md) · [日本語](DEPLOY.ja.md) · [العربية](DEPLOY.ar.md) · **Русский** · [Español](DEPLOY.es.md) · [Português](DEPLOY.pt.md) · [Français](DEPLOY.fr.md) · [Deutsch](DEPLOY.de.md)
 
-Пошаговое руководство по запуску WebToApp в продакшене.
+Пошаговое руководство по запуску All2App в продакшене.
 
 </div>
 
@@ -42,8 +42,8 @@
 ## 2. Получение кода
 
 ```bash
-git clone https://github.com/shiaho777/WebToApp.git
-cd WebToApp
+git clone https://github.com/bigopeforce-bit/All2App.git
+cd All2App
 ```
 
 ## 3. Окружение Python
@@ -68,7 +68,7 @@ cp .env.example .env
 | Переменная | Назначение | По умолчанию |
 | --- | --- | --- |
 | `PUBLIC_BASE_URL` | Публичный origin, напр. `https://app.example.com`. Обязательна в продакшене, иначе iPhone попытается открыть `localhost`. | выводится из заголовка Host |
-| `ANDROID_PACKAGE_PREFIX` | Префикс пакета Android по умолчанию. | `com.webtoapp` |
+| `ANDROID_PACKAGE_PREFIX` | Префикс пакета Android по умолчанию. | `com.all2app` |
 | `ANDROID_KEYSTORE_DIR` | Где хранятся keystore'ы подписи на каждое приложение. Держите ВНЕ любого публичного пути. | `certs/app-keys` |
 | `DAILY_BUILD_QUOTA` | Дневной лимит сборок на устройство (`0` отключает). | `10` |
 | `IOS_CERT_FILE` / `IOS_KEY_FILE` / `IOS_CHAIN_FILE` | Сертификат публичного CA для подписи профилей iOS. | не задано (без подписи, всё равно устанавливается) |
@@ -99,7 +99,7 @@ docker compose up -d --build
 
 Что сохраняется:
 
-- том `webtoapp-generated` — приложения, история и база сообщества
+- том `all2app-generated` — приложения, история и база сообщества
 - `./certs` — keystore Android для каждого приложения и необязательные PEM для iOS (`ios-cert.pem`, `ios-key.pem`, `ios-chain.pem`)
 
 Поставьте обратный прокси на порт 8000. Прокси в частных сетях могут передавать `X-Forwarded-*`. Иначе задайте `DOCKER_TRUSTED_PROXY_CIDRS` в `.env`.
@@ -122,22 +122,22 @@ docker compose up -d --build
 Храните секреты в защищённом env-файле, а не в самом юните:
 
 ```bash
-# /path/to/WebToApp/webtoapp.env  (chmod 600)
+# /path/to/All2App/all2app.env  (chmod 600)
 PUBLIC_BASE_URL=https://your-domain.com
 # при необходимости добавьте R2_* / IOS_* / CLOUDFLARE_*
 ```
 
 ```ini
-# /etc/systemd/system/webtoapp.service
+# /etc/systemd/system/all2app.service
 [Unit]
-Description=WebToApp
+Description=All2App
 After=network.target
 
 [Service]
 User=www-data
-WorkingDirectory=/path/to/WebToApp
-EnvironmentFile=/path/to/WebToApp/webtoapp.env
-ExecStart=/path/to/WebToApp/venv/bin/uvicorn server.main:app --host 127.0.0.1 --port 8000 --workers 1
+WorkingDirectory=/path/to/All2App
+EnvironmentFile=/path/to/All2App/all2app.env
+ExecStart=/path/to/All2App/venv/bin/uvicorn server.main:app --host 127.0.0.1 --port 8000 --workers 1
 Restart=always
 RestartSec=5
 
@@ -146,10 +146,10 @@ WantedBy=multi-user.target
 ```
 
 ```bash
-sudo chmod 600 /path/to/WebToApp/webtoapp.env
+sudo chmod 600 /path/to/All2App/all2app.env
 sudo systemctl daemon-reload
-sudo systemctl enable --now webtoapp
-sudo systemctl status webtoapp
+sudo systemctl enable --now all2app
+sudo systemctl status all2app
 ```
 
 > Оставьте `--workers 1`. Очередь сборки и in-memory лимитер рассчитаны на один процесс.
@@ -188,9 +188,9 @@ iOS Web Clip и профили `.mobileconfig` требуют HTTPS. Два ча
 
 ```bash
 cloudflared tunnel login
-cloudflared tunnel create webtoapp
-cloudflared tunnel route dns webtoapp your-domain.com
-cloudflared tunnel run webtoapp
+cloudflared tunnel create all2app
+cloudflared tunnel route dns all2app your-domain.com
+cloudflared tunnel run all2app
 ```
 
 **Вариант B — Let's Encrypt на Nginx:**
@@ -233,15 +233,15 @@ sudo certbot --nginx -d your-domain.com
 
 ### Настройка
 
-1. В панели Cloudflare откройте **R2** и создайте бакет, напр. `webtoapp-downloads`.
+1. В панели Cloudflare откройте **R2** и создайте бакет, напр. `all2app-downloads`.
 2. **Manage R2 API Tokens → Create API Token** с правами **Object Read & Write**. Скопируйте **Access Key ID** и **Secret Access Key** (секрет показывается один раз).
 3. Сделайте бакет публичным: **Settings → Public access**. Либо включите dev-URL **r2.dev** (`https://pub-xxxx.r2.dev`) для быстрого старта, либо добавьте **Custom Domain** (напр. `files.example.com`), чтобы получить ещё и кеширование на краю.
    > Кастомный домен должен быть на домене, управляемом **тем же аккаунтом Cloudflare**, что и бакет.
-4. Задайте пять переменных в `webtoapp.env`:
+4. Задайте пять переменных в `all2app.env`:
 
    ```bash
    R2_ACCOUNT_ID=...            # ID аккаунта (hex)
-   R2_BUCKET=webtoapp-downloads
+   R2_BUCKET=all2app-downloads
    R2_ACCESS_KEY_ID=...
    R2_SECRET_ACCESS_KEY=...
    R2_PUBLIC_BASE_URL=https://pub-xxxx.r2.dev   # или https://files.example.com
@@ -255,7 +255,7 @@ sudo certbot --nginx -d your-domain.com
 Приложения, собранные до включения R2, всё ещё указывают на локальные файлы. Загрузите их артефакты в R2 и обновите `downloads_cdn` за один проход:
 
 ```bash
-set -a; . ./webtoapp.env; set +a
+set -a; . ./all2app.env; set +a
 venv/bin/python -m server.scripts.backfill_r2 --dry-run   # предпросмотр
 venv/bin/python -m server.scripts.backfill_r2             # выполнить
 ```
@@ -268,7 +268,7 @@ venv/bin/python -m server.scripts.backfill_r2             # выполнить
 git pull
 source venv/bin/activate
 pip install -r server/requirements.txt   # если изменились зависимости
-sudo systemctl restart webtoapp
+sudo systemctl restart all2app
 ```
 
 Если вы меняли фронтенд-ассеты (`css/`, `js/`), обновите строку запроса `?v=` в `index.html`, чтобы браузеры взяли новые файлы вместо кешированных.
@@ -281,7 +281,7 @@ sudo systemctl restart webtoapp
 | Загрузка Android — PWA-zip, а не APK | На сервере не установлены Android SDK / apktool (§9). |
 | Загрузки всё ещё с origin | Отсутствует переменная `R2_*` или не было перезапуска. Для старых приложений запустите backfill (§11). |
 | Профиль iOS показывает «Не проверено» | Профиль не подписан. Укажите сертификат публичного CA (§10). |
-| `502 Bad Gateway` | Служба не запущена или неверный порт — `systemctl status webtoapp`. |
+| `502 Bad Gateway` | Служба не запущена или неверный порт — `systemctl status all2app`. |
 | Эндпоинт сборки возвращает `429` | Достигнут дневной лимит на устройство или лимит по IP. Настройте `DAILY_BUILD_QUOTA`. |
 
 ---

@@ -1,9 +1,9 @@
 /* ============================================================
-   WebToApp — mdmini: tiny safe Markdown subset -> HTML
+   All2App — mdmini: tiny safe Markdown subset -> HTML
    Escape first, then reintroduce a few inline constructs:
      **bold**  *italic*  `code`  [text](https://url)  line breaks
    Everything else (raw HTML, images, iframes, js: links) stays
-   inert text. Exposed as window.wtaMd.
+   inert text. Exposed as window.a2aMd.
    ============================================================ */
 (function () {
   'use strict';
@@ -41,5 +41,5 @@
     return html.replace(/\n/g, '<br>');
   }
 
-  window.wtaMd = render;
+  window.a2aMd = render;
 })();

@@ -1,10 +1,10 @@
 <div align="center">
 
-# WebToApp — デプロイガイド
+# All2App — デプロイガイド
 
 [English](DEPLOY.md) · [简体中文](DEPLOY.zh.md) · **日本語** · [العربية](DEPLOY.ar.md) · [Русский](DEPLOY.ru.md) · [Español](DEPLOY.es.md) · [Português](DEPLOY.pt.md) · [Français](DEPLOY.fr.md) · [Deutsch](DEPLOY.de.md)
 
-WebToApp を本番環境で動かすためのステップバイステップガイド。
+All2App を本番環境で動かすためのステップバイステップガイド。
 
 </div>
 
@@ -42,8 +42,8 @@ WebToApp を本番環境で動かすためのステップバイステップガ�
 ## 2. コードを取得
 
 ```bash
-git clone https://github.com/shiaho777/WebToApp.git
-cd WebToApp
+git clone https://github.com/bigopeforce-bit/All2App.git
+cd All2App
 ```
 
 ## 3. Python 環境
@@ -68,7 +68,7 @@ cp .env.example .env
 | 変数 | 用途 | デフォルト |
 | --- | --- | --- |
 | `PUBLIC_BASE_URL` | 公開オリジン（例 `https://app.example.com`）。本番では必須。さもないと iPhone が `localhost` を開こうとします。 | Host ヘッダから推測 |
-| `ANDROID_PACKAGE_PREFIX` | デフォルトの Android パッケージ接頭辞。 | `com.webtoapp` |
+| `ANDROID_PACKAGE_PREFIX` | デフォルトの Android パッケージ接頭辞。 | `com.all2app` |
 | `ANDROID_KEYSTORE_DIR` | アプリごとの署名キーストアの保存先。公開パスの外に置くこと。 | `certs/app-keys` |
 | `DAILY_BUILD_QUOTA` | デバイスごとの 1 日のビルド上限（`0` で無効）。 | `10` |
 | `IOS_CERT_FILE` / `IOS_KEY_FILE` / `IOS_CHAIN_FILE` | iOS プロファイル署名用の公的 CA 証明書。 | 未設定（未署名でもインストール可） |
@@ -99,7 +99,7 @@ docker compose up -d --build
 
 残るもの:
 
-- ボリューム `webtoapp-generated` — アプリ、履歴、コミュニティのデータベース
+- ボリューム `all2app-generated` — アプリ、履歴、コミュニティのデータベース
 - `./certs` — アプリごとの Android 鍵と、任意の iOS PEM（`ios-cert.pem`、`ios-key.pem`、`ios-chain.pem`）
 
 リバースプロキシを 8000 番へ向けます。プライベートアドレスのプロキシは `X-Forwarded-*` を信頼します。それ以外のアドレスなら `.env` に `DOCKER_TRUSTED_PROXY_CIDRS` を設定してください。
@@ -122,22 +122,22 @@ docker compose up -d --build
 シークレットは unit にインラインで書かず、権限を絞った環境ファイルに保存します：
 
 ```bash
-# /path/to/WebToApp/webtoapp.env  （chmod 600）
+# /path/to/All2App/all2app.env  （chmod 600）
 PUBLIC_BASE_URL=https://your-domain.com
 # 必要に応じて R2_* / IOS_* / CLOUDFLARE_* を追加
 ```
 
 ```ini
-# /etc/systemd/system/webtoapp.service
+# /etc/systemd/system/all2app.service
 [Unit]
-Description=WebToApp
+Description=All2App
 After=network.target
 
 [Service]
 User=www-data
-WorkingDirectory=/path/to/WebToApp
-EnvironmentFile=/path/to/WebToApp/webtoapp.env
-ExecStart=/path/to/WebToApp/venv/bin/uvicorn server.main:app --host 127.0.0.1 --port 8000 --workers 1
+WorkingDirectory=/path/to/All2App
+EnvironmentFile=/path/to/All2App/all2app.env
+ExecStart=/path/to/All2App/venv/bin/uvicorn server.main:app --host 127.0.0.1 --port 8000 --workers 1
 Restart=always
 RestartSec=5
 
@@ -146,10 +146,10 @@ WantedBy=multi-user.target
 ```
 
 ```bash
-sudo chmod 600 /path/to/WebToApp/webtoapp.env
+sudo chmod 600 /path/to/All2App/all2app.env
 sudo systemctl daemon-reload
-sudo systemctl enable --now webtoapp
-sudo systemctl status webtoapp
+sudo systemctl enable --now all2app
+sudo systemctl status all2app
 ```
 
 > `--workers 1` を維持してください。ビルドキューとメモリ内レートリミッターは単一プロセスを前提としています。
@@ -188,10 +188,10 @@ iOS Web Clip と `.mobileconfig` プロファイルは HTTPS が必須です。�
 
 ```bash
 cloudflared tunnel login
-cloudflared tunnel create webtoapp
+cloudflared tunnel create all2app
 # ホスト名をトンネルにルーティングし、http://127.0.0.1:8000 に向ける
-cloudflared tunnel route dns webtoapp your-domain.com
-cloudflared tunnel run webtoapp
+cloudflared tunnel route dns all2app your-domain.com
+cloudflared tunnel run all2app
 ```
 
 **方法 B — Nginx 上の Let's Encrypt：**
@@ -234,15 +234,15 @@ sudo certbot --nginx -d your-domain.com
 
 ### セットアップ
 
-1. Cloudflare ダッシュボードで **R2** を開き、バケット（例 `webtoapp-downloads`）を作成。
+1. Cloudflare ダッシュボードで **R2** を開き、バケット（例 `all2app-downloads`）を作成。
 2. **Manage R2 API Tokens → Create API Token** で **Object Read & Write** 権限を付与。**Access Key ID** と **Secret Access Key** をコピー（シークレットは一度しか表示されません）。
 3. バケットを公開：バケットの **Settings → Public access**。手早く始めるなら **r2.dev** 開発 URL（`https://pub-xxxx.r2.dev`）を有効化、エッジキャッシュも得たいなら **カスタムドメイン**（例 `files.example.com`）を追加。
    > カスタムドメインは、バケットと**同じ Cloudflare アカウント**が管理するドメインである必要があります。
-4. `webtoapp.env` に 5 つの変数を設定：
+4. `all2app.env` に 5 つの変数を設定：
 
    ```bash
    R2_ACCOUNT_ID=...            # アカウント ID（hex）
-   R2_BUCKET=webtoapp-downloads
+   R2_BUCKET=all2app-downloads
    R2_ACCESS_KEY_ID=...
    R2_SECRET_ACCESS_KEY=...
    R2_PUBLIC_BASE_URL=https://pub-xxxx.r2.dev   # または https://files.example.com
@@ -256,7 +256,7 @@ sudo certbot --nginx -d your-domain.com
 R2 有効化前にビルドされたアプリはまだローカルファイルを指しています。それらの成果物を R2 にアップロードし、`downloads_cdn` を一括更新：
 
 ```bash
-set -a; . ./webtoapp.env; set +a
+set -a; . ./all2app.env; set +a
 venv/bin/python -m server.scripts.backfill_r2 --dry-run   # プレビュー
 venv/bin/python -m server.scripts.backfill_r2             # 実行
 ```
@@ -269,7 +269,7 @@ venv/bin/python -m server.scripts.backfill_r2             # 実行
 git pull
 source venv/bin/activate
 pip install -r server/requirements.txt   # 依存が変わった場合
-sudo systemctl restart webtoapp
+sudo systemctl restart all2app
 ```
 
 フロントエンド資産（`css/`、`js/`）を変更した場合は、`index.html` の `?v=` クエリ文字列を更新し、ブラウザがキャッシュではなく新しいファイルを取得するようにします。
@@ -282,7 +282,7 @@ sudo systemctl restart webtoapp
 | Android のダウンロードが APK でなく PWA zip | サーバーに Android SDK / apktool 未インストール（§9）。 |
 | ダウンロードがまだオリジンから配信される | `R2_*` 変数の欠落、または設定後に未再起動。既存アプリはバックフィル要（§11）。 |
 | iOS プロファイルが「未検証」と表示 | プロファイルが未署名。公的 CA 証明書を提供（§10）。 |
-| `502 Bad Gateway` | サービス未起動かポート誤り——`systemctl status webtoapp`。 |
+| `502 Bad Gateway` | サービス未起動かポート誤り——`systemctl status all2app`。 |
 | ビルドエンドポイントが `429` を返す | デバイスごとの日次クォータまたは IP ごとのレート制限に到達。`DAILY_BUILD_QUOTA` を調整。 |
 
 ---

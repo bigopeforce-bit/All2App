@@ -1,21 +1,18 @@
 <div align="center">
 
-<img src="../assets/site-logo.jpg" alt="WebToApp" width="120" height="120" style="border-radius: 24px;">
+<img src="../assets/site-logo.jpg" alt="All2App" width="120" height="120" style="border-radius: 24px;">
 
-# WebToApp
+# All2App
 
 **Превратите любой сайт в устанавливаемое приложение — за секунды.**
 
 На входе одна ссылка, на выходе готовые продукты для **iPhone / iPad · Android · Windows · macOS · Linux** — плюс публичный маркет приложений, профили авторов, комментарии и оценки, и всё это без регистрации.
 
-[![Живое демо](https://img.shields.io/badge/Живое_демо-shiaho.sbs-c97953?style=for-the-badge)](https://shiaho.sbs)
-[![CI](https://img.shields.io/badge/CI-pytest%20336-059669?style=for-the-badge)](https://github.com/shiaho777/WebToApp/actions)
+[![CI](https://img.shields.io/badge/CI-pytest%20336-059669?style=for-the-badge)](https://github.com/bigopeforce-bit/All2App/actions)
 [![Лицензия: MIT](https://img.shields.io/badge/License-MIT-1e1914?style=for-the-badge)](../LICENSE)
 [![Платформы](https://img.shields.io/badge/Платформы-5-736357?style=for-the-badge)](#что-вы-получаете)
 
 [English](../README.md) · [简体中文](README.zh.md) · [日本語](README.ja.md) · [العربية](README.ar.md) · **Русский** · [Español](README.es.md) · [Português](README.pt.md) · [Français](README.fr.md) · [Deutsch](README.de.md)
-
-Группа QQ **947508787**
 
 </div>
 
@@ -26,8 +23,6 @@
 Введите URL — или загрузите свой `.html` / `.zip` — и через несколько секунд получите устанавливаемый результат для всех платформ. Каждый артефакт — тонкая нативная оболочка, указывающая на ваш сайт, поэтому размер пакетов измеряется **килобайтами, а не мегабайтами**, и они скачиваются почти мгновенно.
 
 Каждое созданное приложение живёт на собственной странице загрузки `/a/<id>`: варианты установки по платформам, сворачиваемая секция «Об этой странице», которую автор может заполнить реальным содержимым, и слой сообщества с комментариями и звёздными оценками. Опубликуйте публичную ссылку — и приложение также появится в **маркете приложений** для всех.
-
-Open source · Бесплатно · Без регистрации. Попробуйте вживую: **[shiaho.sbs](https://shiaho.sbs)**.
 
 ---
 
@@ -172,9 +167,9 @@ uvicorn server.main:app --host 127.0.0.1 --port 8000
 В продакшене обычно запускают под systemd за reverse-прокси Nginx:
 
 ```ini
-# /etc/systemd/system/webtoapp.service
+# /etc/systemd/system/all2app.service
 [Unit]
-Description=WebToApp
+Description=All2App
 After=network.target
 
 [Service]

@@ -1,4 +1,4 @@
-/* WebToApp — fr translations (split from i18n.strings.js, issue #228).
+/* All2App — fr translations (split from i18n.strings.js, issue #228).
    Loaded on demand by js/i18n.js; en ships as the built-in fallback. */
 (function () {
   'use strict';
@@ -16,29 +16,15 @@ R('fr', {
     'analysis.htmlSource': 'Type de source',
     'analysis.htmlSourceValue': 'HTML téléversé',
     'history.badgeHtml': 'HTML',
-    'meta.title': 'WebToApp — Transformez les sites web en applications | Gratuit et open source',
+    'meta.title': 'All2App — Transformez les sites web en applications | Gratuit et open source',
     'meta.description': 'Saisissez une URL et obtenez une application que vous pouvez installer, partager et utiliser immédiatement. Fonctionne sur iPhone, Android, Windows, macOS et Linux.',
-    'meta.ogTitle': 'WebToApp — Transformez les sites web en applications',
+    'meta.ogTitle': 'All2App — Transformez les sites web en applications',
     'meta.ogDescription': 'Saisissez un lien. En quelques secondes, il peut être installé, partagé et utilisé comme une application.',
 
     'nav.langLabel': 'Langue',
     'nav.github': 'Voir le code sur GitHub',
-    'nav.qq': 'Communauté',
-    'nav.qqShort': 'Communauté',
-    'nav.qqLead': 'Rejoindre le groupe « WebToApp 网页版 »',
-    'nav.qqNumber': 'Numéro du groupe',
-    'nav.qqJoin': 'Rejoindre le groupe',
-    'nav.qqCopy': 'Copier le numéro',
-    'nav.qqCopied': 'Copié',
-    'nav.qqCopyFailed': 'La copie a échoué. Sélectionnez le numéro ci-dessus.',
-    'nav.qqClose': 'Fermer',
-    'nav.communityTitle': 'Communauté',
-    'nav.tgTitle': 'Telegram',
-    'nav.tgNote': 'C’est le groupe d’un autre projet qui porte le même nom. On peut aussi en parler là-bas.',
-    'nav.tgJoin': 'Ouvrir Telegram',
-    'nav.qqSection': 'Groupe QQ',
 
-    'hero.kicker': 'WEBTOAPP / DU SITE À L\u2019APPLI',
+    'hero.kicker': 'ALL2APP / DU SITE À L\u2019APPLI',
     'hero.titleLine1': 'Transformez les sites web',
     'hero.titleLine2': 'en applications.',
     'hero.badge': 'Open source · Gratuit · Sans inscription',

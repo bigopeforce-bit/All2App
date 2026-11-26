@@ -1,4 +1,4 @@
-/* WebToApp — ko translations (split from i18n.strings.js, issue #228).
+/* All2App — ko translations (split from i18n.strings.js, issue #228).
    Loaded on demand by js/i18n.js; en ships as the built-in fallback. */
 (function () {
   'use strict';
@@ -16,27 +16,13 @@ R('ko', {
     'analysis.htmlSource': '소스 유형',
     'analysis.htmlSourceValue': '업로드한 HTML',
     'history.badgeHtml': 'HTML',
-    'meta.title': 'WebToApp — 웹사이트를 앱으로 | 무료·오픈 소스',
+    'meta.title': 'All2App — 웹사이트를 앱으로 | 무료·오픈 소스',
     'meta.description': 'URL을 입력하면 바로 설치·공유·사용할 수 있는 앱을 만듭니다. iPhone, Android, Windows, macOS, Linux에서 작동합니다.',
-    'meta.ogTitle': 'WebToApp — 웹사이트를 앱으로',
+    'meta.ogTitle': 'All2App — 웹사이트를 앱으로',
     'meta.ogDescription': '링크를 입력하세요. 몇 초 뒤 앱처럼 설치·공유·사용할 수 있습니다.',
     'nav.langLabel': '언어',
     'nav.github': 'GitHub에서 소스 보기',
-    'nav.qq': '커뮤니티',
-    'nav.qqShort': '커뮤니티',
-    'nav.qqLead': '“WebToApp 网页版” 그룹 채팅에 참여하세요.',
-    'nav.qqNumber': '그룹 번호',
-    'nav.qqJoin': '그룹 참여',
-    'nav.qqCopy': '번호 복사',
-    'nav.qqCopied': '복사됨',
-    'nav.qqCopyFailed': '복사하지 못했습니다. 위 번호를 선택하세요.',
-    'nav.qqClose': '닫기',
-    'nav.communityTitle': '커뮤니티',
-    'nav.tgTitle': 'Telegram',
-    'nav.tgNote': '이 그룹은 같은 이름의 다른 프로젝트 소속입니다. 여기서 이 사이트에 대해 이야기해도 됩니다.',
-    'nav.tgJoin': 'Telegram 열기',
-    'nav.qqSection': 'QQ 그룹',
-    'hero.kicker': 'WEBTOAPP / 웹사이트를 앱으로',
+    'hero.kicker': 'ALL2APP / 웹사이트를 앱으로',
     'hero.titleLine1': '웹사이트를',
     'hero.titleLine2': '앱으로.',
     'hero.badge': '오픈 소스 · 무료 · 가입 불필요',

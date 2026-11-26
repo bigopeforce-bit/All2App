@@ -1,5 +1,5 @@
 /* ============================================================
-   WebToApp — Frontend Logic
+   All2App — Frontend Logic
    Zero dependencies. Every function earns its place.
    ============================================================ */
 
@@ -9,7 +9,7 @@
   // --- Short-lived render cache ---
   // The APIs are fast at the origin but can spend seconds behind the CDN.
   // Paint the last real response immediately, then replace it with fresh data.
-  const RENDER_CACHE_PREFIX = 'webtoapp-render-cache-v1:';
+  const RENDER_CACHE_PREFIX = 'all2app-render-cache-v1:';
   const RENDER_CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 
   function readRenderCache(name) {
@@ -345,7 +345,7 @@
   renderLanguagePicker();
   // edit_token is the only proof of app ownership — visibility/URL edits
   // require it server-side, so persist it across reloads like the fingerprint.
-  const EDIT_TOKENS_KEY = 'webtoapp-edit-tokens-v1';
+  const EDIT_TOKENS_KEY = 'all2app-edit-tokens-v1';
   let editTokens = {};
   try { editTokens = JSON.parse(localStorage.getItem(EDIT_TOKENS_KEY) || '{}') || {}; } catch (e) { editTokens = {}; }
   function saveEditTokens() {
@@ -353,12 +353,12 @@
   }
   let restoreIconButtonLabel = '';
   let deviceFingerprint = '';
-  const DEVICE_STORAGE_KEY = 'webtoapp-device-fingerprint-v1';
-  const DEVICE_COOKIE_KEY = 'webtoapp_device_fingerprint';
+  const DEVICE_STORAGE_KEY = 'all2app-device-fingerprint-v1';
+  const DEVICE_COOKIE_KEY = 'all2app_device_fingerprint';
   const t = (key, params) => (window.I18n ? window.I18n.t(key, params) : key);
   const locale = () => (window.I18n ? window.I18n.locale() : 'en-US');
   function takePrefetch(name) {
-    const bucket = window.__wtaPrefetch;
+    const bucket = window.__a2aPrefetch;
     if (!bucket || !bucket[name]) return null;
     const promise = bucket[name];
     try { delete bucket[name]; } catch (_err) { bucket[name] = null; }
@@ -480,7 +480,7 @@
       if (/^[0-9]/.test(token)) token = `p${token}`;
       return token;
     }).filter(Boolean);
-    return parts.length >= 2 ? parts.join('.') : 'com.webtoapp';
+    return parts.length >= 2 ? parts.join('.') : 'com.all2app';
   }
 
   function getDeviceFingerprint() {
@@ -1166,7 +1166,7 @@
   loadMarket();
 
   // --- User profile (fingerprint identity → sequential user_num) ---
-  const PROFILE_CACHE_KEY = 'webtoapp-profile-v1';
+  const PROFILE_CACHE_KEY = 'all2app-profile-v1';
   let profileSelfNum = null;
   let profileViewingSelf = true;
   let profileViewedNum = null;
@@ -1238,7 +1238,7 @@
     profileSetAvatar(profile.avatar_url, name, profile.user_num);
     profileVisBadge.textContent = t('profile.publicView');
     profileVisBadge.classList.toggle('hidden', mine);
-    profileBioView.innerHTML = profile.bio_md ? window.wtaMd(profile.bio_md) : '';
+    profileBioView.innerHTML = profile.bio_md ? window.a2aMd(profile.bio_md) : '';
     profileAppsLabel.textContent = t(mine ? 'profile.myApps' : 'profile.publicApps');
     profileRenderApps(apps, mine);
     avatarUploadBtn.classList.toggle('hidden', !mine);
@@ -1309,12 +1309,12 @@
   }
 
   function notify(message, type) {
-    if (window.WtaUI) window.WtaUI.toast(message, { type: type || 'info' });
+    if (window.A2AUI) window.A2AUI.toast(message, { type: type || 'info' });
     else window.alert(message);
   }
 
   function ask(message, options) {
-    if (window.WtaUI) return window.WtaUI.confirm(message, options);
+    if (window.A2AUI) return window.A2AUI.confirm(message, options);
     return Promise.resolve(window.confirm(message));
   }
 
@@ -1354,92 +1354,6 @@
     return legacy();
   }
 
-  function initQqGroup() {
-    const btn = document.getElementById('qq-group-btn');
-    const panel = document.getElementById('qq-group-panel');
-    const closeBtn = document.getElementById('qq-group-close');
-    const copyBtn = document.getElementById('qq-group-copy');
-    const numberEl = document.getElementById('qq-group-number');
-    const statusEl = document.getElementById('qq-group-status');
-    if (!btn || !panel || !closeBtn || !copyBtn || !numberEl || !statusEl) return;
-
-    let statusTimer = 0;
-    const isOpen = () => !panel.classList.contains('hidden');
-
-    function clearStatus() {
-      window.clearTimeout(statusTimer);
-      statusTimer = 0;
-      statusEl.textContent = '';
-      statusEl.classList.remove('is-failed');
-    }
-
-    function showStatus(message, failed) {
-      window.clearTimeout(statusTimer);
-      statusEl.textContent = message;
-      statusEl.classList.toggle('is-failed', !!failed);
-      statusTimer = window.setTimeout(clearStatus, 2000);
-    }
-
-    function openPanel() {
-      panel.classList.remove('hidden');
-      btn.setAttribute('aria-expanded', 'true');
-      const join = panel.querySelector('.community-link');
-      if (join) join.focus();
-    }
-
-    function closePanel(restoreFocus) {
-      if (!isOpen()) return;
-      panel.classList.add('hidden');
-      btn.setAttribute('aria-expanded', 'false');
-      clearStatus();
-      if (restoreFocus) btn.focus();
-    }
-
-    btn.addEventListener('click', (event) => {
-      event.stopPropagation();
-      if (isOpen()) closePanel(false);
-      else openPanel();
-    });
-
-    closeBtn.addEventListener('click', () => closePanel(true));
-
-    document.addEventListener('click', (event) => {
-      if (!isOpen()) return;
-      if (panel.contains(event.target) || btn.contains(event.target)) return;
-      closePanel(false);
-    });
-
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && isOpen()) {
-        event.preventDefault();
-        closePanel(true);
-      }
-    });
-
-    panel.addEventListener('focusout', (event) => {
-      if (!isOpen()) return;
-      const next = event.relatedTarget;
-      if (!next || panel.contains(next) || next === btn) return;
-      closePanel(false);
-    });
-
-    copyBtn.addEventListener('click', () => {
-      const number = (numberEl.textContent || '').trim();
-      copyPlainText(number).then(() => {
-        showStatus(t('nav.qqCopied'), false);
-      }).catch(() => {
-        showStatus(t('nav.qqCopyFailed'), true);
-      });
-    });
-
-    window.addEventListener('i18n:changed', () => {
-      if (!statusEl.textContent) return;
-      statusEl.textContent = statusEl.classList.contains('is-failed')
-        ? t('nav.qqCopyFailed')
-        : t('nav.qqCopied');
-    });
-  }
-
   function initProfile() {
     // Paint the cached avatar instantly, then refresh in the background —
     // otherwise the nav button shows the generic icon on every page load
@@ -1453,7 +1367,6 @@
         paintNavAvatar(d.profile);
       }
     }).catch(() => {});
-    initQqGroup();
     profileBtn.addEventListener('click', () => openProfile(null));
     profileClose.addEventListener('click', () => closeProfileModal());
     profileModal.addEventListener('click', (e) => {
@@ -1585,7 +1498,7 @@
       : t('config.versionCodePlaceholder');
     syncInputValue(
       androidPackagePrefixInput,
-      sanitizeAndroidPackagePrefix(item.android_package_prefix || recipe.android_package_prefix || 'com.webtoapp')
+      sanitizeAndroidPackagePrefix(item.android_package_prefix || recipe.android_package_prefix || 'com.all2app')
     );
     applyFeatureOptionsToForm(featureOptions);
     // Rebuild tag/visibility state — a rebuild must keep the stored values
@@ -1828,9 +1741,9 @@
     // submitter. Solved in a Worker before the request; null only when the
     // solver is unavailable, in which case the server's 428 explains why.
     let pow = null;
-    if (window.WtaPow) {
+    if (window.A2APow) {
       updateBuildProgress('queued', null);
-      pow = await window.WtaPow.solve();
+      pow = await window.A2APow.solve();
     }
     const powFields = pow ? { pow_challenge: pow.challenge, pow_solution: pow.solution } : {};
 
@@ -2866,7 +2779,7 @@
       const href = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = href;
-      link.download = `webtoapp-history-${new Date().toISOString().slice(0, 10)}.json`;
+      link.download = `all2app-history-${new Date().toISOString().slice(0, 10)}.json`;
       link.click();
       URL.revokeObjectURL(href);
     } catch (_err) {

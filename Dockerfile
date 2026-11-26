@@ -1,4 +1,4 @@
-# WebToApp
+# All2App
 # Default image includes a JDK, the Android SDK and apktool, so generated
 # Android packages are real APKs. Build with --build-arg WITH_ANDROID=0 for
 # a smaller image; Android then falls back to an installable PWA zip.
@@ -27,9 +27,9 @@ RUN pip install --no-cache-dir -r server/requirements.txt
 COPY . .
 
 RUN if [ "$WITH_ANDROID" = "1" ]; then bash server/scripts/install_android_sdk.sh; fi \
-    && useradd --create-home --uid 1000 --shell /bin/sh webtoapp \
+    && useradd --create-home --uid 1000 --shell /bin/sh all2app \
     && mkdir -p /app/generated /app/certs/app-keys /app/server/engine/_android_template \
-    && chown -R webtoapp:webtoapp /app/generated /app/certs /app/server/engine/_android_template \
+    && chown -R all2app:all2app /app/generated /app/certs /app/server/engine/_android_template \
     && chmod 755 /app/docker/entrypoint.sh
 
 EXPOSE 8000

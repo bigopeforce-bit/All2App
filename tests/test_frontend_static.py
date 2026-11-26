@@ -2,7 +2,7 @@
 
 Native alert()/confirm() block the page, can't be styled or translated
 consistently, and are suppressed in some embedded browsers. All feedback
-goes through js/ui.js (window.WtaUI); app code may only fall back to the
+goes through js/ui.js (window.A2AUI); app code may only fall back to the
 native dialogs when that helper is missing.
 """
 
@@ -44,12 +44,12 @@ class FrontendFeedbackTests(unittest.TestCase):
 
     def test_ui_helpers_expose_toast_and_confirm(self):
         src = _read("js/ui.js")
-        self.assertIn("window.WtaUI", src)
+        self.assertIn("window.A2AUI", src)
         self.assertIn("aria-live", src)
 
     def test_no_unguarded_native_dialogs(self):
         # Native dialogs are allowed only on a line that also checks for
-        # the WtaUI helper (the fallback path), or inside ui.js itself.
+        # the A2AUI helper (the fallback path), or inside ui.js itself.
         pattern = re.compile(r"(?<![\w.])(?:window\.)?(alert|confirm)\(")
         for rel in ("js/app.v5.js", "js/community.js"):
             lines = _read(rel).splitlines()
@@ -58,8 +58,8 @@ class FrontendFeedbackTests(unittest.TestCase):
                     continue
                 context = "\n".join(lines[max(0, no - 3):no])
                 self.assertIn(
-                    "WtaUI", context,
-                    f"{rel}:{no} uses a native dialog without a WtaUI fallback guard",
+                    "A2AUI", context,
+                    f"{rel}:{no} uses a native dialog without a A2AUI fallback guard",
                 )
 
     def test_new_strings_exist_in_every_language(self):
@@ -302,7 +302,7 @@ class FrontendPerformanceTests(unittest.TestCase):
             src = _read(rel)
             self.assertRegex(
                 src,
-                r'<img src="/?assets/site-logo-96\.jpg\?v=[\w-]+" alt="WebToApp" width="28" height="28">',
+                r'<img src="/?assets/site-logo-96\.jpg\?v=[\w-]+" alt="All2App" width="28" height="28">',
                 rel,
             )
             self.assertNotIn('src="assets/site-logo.jpg"', src, rel)
@@ -365,7 +365,7 @@ class FrontendDesignSystemTests(unittest.TestCase):
 
     def test_ui_helpers_follow_tokens_with_light_fallbacks(self):
         src = _read("js/ui.js")
-        css_lines = [line for line in src.splitlines() if line.strip().startswith("'.wta-")]
+        css_lines = [line for line in src.splitlines() if line.strip().startswith("'.a2a-")]
         self.assertTrue(css_lines)
         for line in css_lines:
             stripped = re.sub(r"var\([^()]*(?:\([^()]*\)[^()]*)*\)", "", line)
@@ -433,7 +433,7 @@ class BrandAndComponentSystemTests(unittest.TestCase):
         self.assertIn("application/manifest+json", _read("server/main.py"))
 
     def test_palette_matches_reference_tokens(self):
-        # Original WebToApp palette (#169): warm paper, ink, terracotta.
+        # Original All2App palette (#169): warm paper, ink, terracotta.
         self.assertIn("--paper: #f7f3ec;", self.root)
         self.assertIn("--paper-deep: #efe7db;", self.root)
         self.assertRegex(self.root, r"--ink-rgb:\s*30,\s*25,\s*20;")
@@ -665,13 +665,13 @@ class StreamingFirstLoadTests(unittest.TestCase):
         self.css = _read("css/style.css")
 
     def test_api_requests_start_in_head_before_app_js(self):
-        self.assertIn("window.__wtaPrefetch", self.html)
+        self.assertIn("window.__a2aPrefetch", self.html)
         for endpoint in ("/api/stats", "/api/history", "/api/me", "/api/market"):
             self.assertIn(endpoint, self.html)
         # Must run before the render-blocking stylesheet, or the browser waits
         # for CSSOM before starting the API calls.
-        self.assertLess(self.html.index("window.__wtaPrefetch"), self.html.index("css/style.css"))
-        self.assertLess(self.html.index("window.__wtaPrefetch"), self.html.index("js/app.v5.js"))
+        self.assertLess(self.html.index("window.__a2aPrefetch"), self.html.index("css/style.css"))
+        self.assertLess(self.html.index("window.__a2aPrefetch"), self.html.index("js/app.v5.js"))
 
     def test_app_consumes_prefetched_promises(self):
         self.assertIn("function takePrefetch(name)", self.js)
@@ -710,8 +710,8 @@ class StreamingFirstLoadTests(unittest.TestCase):
         self.assertIn("promise.catch(function () {})", self.html)
 
     def test_streaming_assets_are_cache_busted(self):
-        self.assertIn("css/style.css?v=20261118-board1", self.html)
-        self.assertIn("js/app.v5.js?v=20261118-board1", self.html)
+        self.assertIn("css/style.css?v=20261126-all2app1", self.html)
+        self.assertIn("js/app.v5.js?v=20261126-all2app1", self.html)
 
     def test_feedback_board_is_wired(self):
         # #248: nav entry + modal + the board module in app.v5.js.
@@ -741,8 +741,8 @@ class StreamingFirstLoadTests(unittest.TestCase):
         # submits builds.
         self.assertIn("js/pow.js?v=", self.html)
         self.assertLess(self.html.index("js/pow.js"), self.html.index("js/app.v5.js"))
-        self.assertIn("window.WtaPow", _read("js/pow.js"))
-        self.assertIn("WtaPow.solve()", self.js)
+        self.assertIn("window.A2APow", _read("js/pow.js"))
+        self.assertIn("A2APow.solve()", self.js)
 
     def test_icon_publish_gate_is_wired(self):
         # issue #232: publishing requires a usable icon; the warning lives at

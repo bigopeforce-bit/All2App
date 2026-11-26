@@ -1,4 +1,4 @@
-/* WebToApp — ar translations (split from i18n.strings.js, issue #228).
+/* All2App — ar translations (split from i18n.strings.js, issue #228).
    Loaded on demand by js/i18n.js; en ships as the built-in fallback. */
 (function () {
   'use strict';
@@ -16,29 +16,15 @@ R('ar', {
     'analysis.htmlSource': 'نوع المصدر',
     'analysis.htmlSourceValue': 'HTML مرفوع',
     'history.badgeHtml': 'HTML',
-    'meta.title': 'WebToApp — حوّل المواقع إلى تطبيقات | مجاني ومفتوح المصدر',
+    'meta.title': 'All2App — حوّل المواقع إلى تطبيقات | مجاني ومفتوح المصدر',
     'meta.description': 'أدخل رابطًا واحصل على تطبيق يمكنك تثبيته ومشاركته واستخدامه فورًا. يعمل على iPhone وAndroid وWindows وmacOS وLinux.',
-    'meta.ogTitle': 'WebToApp — حوّل المواقع إلى تطبيقات',
+    'meta.ogTitle': 'All2App — حوّل المواقع إلى تطبيقات',
     'meta.ogDescription': 'أدخل رابطًا. خلال ثوانٍ يمكن تثبيته ومشاركته واستخدامه كتطبيق.',
 
     'nav.langLabel': 'اللغة',
     'nav.github': 'عرض المصدر على GitHub',
-    'nav.qq': 'المجتمع',
-    'nav.qqShort': 'المجتمع',
-    'nav.qqLead': 'انضم إلى دردشة المجموعة «WebToApp 网页版»',
-    'nav.qqNumber': 'رقم المجموعة',
-    'nav.qqJoin': 'الانضمام للمجموعة',
-    'nav.qqCopy': 'نسخ الرقم',
-    'nav.qqCopied': 'تم النسخ',
-    'nav.qqCopyFailed': 'تعذّر النسخ. حدّد الرقم أعلاه.',
-    'nav.qqClose': 'إغلاق',
-    'nav.communityTitle': 'المجتمع',
-    'nav.tgTitle': 'تيليغرام',
-    'nav.tgNote': 'هذه مجموعة مشروع آخر بالاسم نفسه. يمكن الحديث عن هذا الموقع هناك أيضًا.',
-    'nav.tgJoin': 'فتح تيليغرام',
-    'nav.qqSection': 'مجموعة QQ',
 
-    'hero.kicker': 'WEBTOAPP / من الموقع إلى التطبيق',
+    'hero.kicker': 'ALL2APP / من الموقع إلى التطبيق',
     'hero.titleLine1': 'حوّل المواقع',
     'hero.titleLine2': 'إلى تطبيقات.',
     'hero.badge': 'مفتوح المصدر · مجاني · بدون تسجيل',

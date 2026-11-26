@@ -1,5 +1,5 @@
 """
-WebToApp — Distillation Engine Server
+All2App — Distillation Engine Server
 FastAPI backend: site analysis, content distillation, app generation & download.
 """
 
@@ -52,7 +52,7 @@ from server.market_dedupe import conflicts_with_newer, dedupe_creator, dedupe_pu
 from server.logging_util import log_event, setup_logging
 from server.task_store import TaskStore
 
-app = FastAPI(title="WebToApp Distillation Engine", version="1.0.0")
+app = FastAPI(title="All2App Distillation Engine", version="1.0.0")
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
 
@@ -69,7 +69,7 @@ _LONG_CACHE_SUFFIXES = (".css", ".js", ".png", ".jpg", ".jpeg", ".webp", ".svg",
 # ``/generated`` holds per-app recipe.json files (which carry the secret
 # edit_token); they must only be reached via the curated /a/{id}/... routes.
 _BLOCKED_STATIC_PREFIXES = ("/certs", "/server", "/.git", "/deploy", "/generated")
-# ``.env`` covers the deployed webtoapp.env (R2 credentials); ``.json`` is
+# ``.env`` covers the deployed all2app.env (R2 credentials); ``.json`` is
 # deliberately NOT listed — /a/{id}/manifest.json is a legitimate route, and
 # sensitive .json files all live under blocked prefixes anyway.
 _BLOCKED_STATIC_SUFFIXES = (".keystore", ".jks", ".pem", ".key", ".p12", ".pfx", ".env", ".bak", ".sqlite3", ".log")
@@ -264,7 +264,7 @@ recipes = RecipeStore()
 http_client = httpx.AsyncClient(
     follow_redirects=False,
     timeout=30.0,
-    headers={"User-Agent": "WebToApp/1.0 (+https://github.com/)"},
+    headers={"User-Agent": "All2App/1.0 (+https://github.com/)"},
 )
 DISTILL_WORKER_COUNT = config.distill_worker_count()
 RECIPE_CACHE_SIZE = config.recipe_cache_size()
@@ -652,7 +652,7 @@ def _public_recipe(recipe: dict) -> dict:
 
 
 def _device_fingerprint(request: Request) -> Optional[str]:
-    raw = str(request.cookies.get("webtoapp_device_fingerprint", "") or "").strip()
+    raw = str(request.cookies.get("all2app_device_fingerprint", "") or "").strip()
     if not raw:
         return None
     cleaned = re.sub(r"[^A-Za-z0-9._:-]", "", raw)[:160]

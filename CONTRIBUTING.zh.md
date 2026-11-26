@@ -1,6 +1,6 @@
 # 贡献指南 (简体中文)
 
-感谢你参与改进 WebToApp!本指南说明改动如何合入本项目。
+感谢你参与改进 All2App!本指南说明改动如何合入本项目。
 
 **English** · 简体中文
 
@@ -12,7 +12,7 @@
 Issue → 向 main 提 PR → CI 通过 → 合并 → Issue 自动关闭
 ```
 
-1. **从 Issue 开始。** 如果还没有对应 Issue,[新建一个](https://github.com/shiaho777/WebToApp/issues/new),描述问题和改动范围。
+1. **从 Issue 开始。** 如果还没有对应 Issue,[新建一个](https://github.com/bigopeforce-bit/All2App/issues/new),描述问题和改动范围。
 2. **从 `main` 切分支。** 用清晰的命名(`fix/...`、`feat/...`、`docs/...`)。
 3. **实施改动。** 保持提交聚焦。不要提交密钥、`generated/`、`certs/*.keystore` / `*.pem` 或 IDE/系统垃圾文件 —— 它们已被 git 忽略。
 4. **本地跑测试:**
@@ -40,7 +40,7 @@ Issue → 向 main 提 PR → CI 通过 → 合并 → Issue 自动关闭
 
 开 Issue 时请包含:
 - 期望的行为 vs 实际发生的情况。
-- 你测试的 URL(WebToApp 本身的网址,或你封装的目标网站)。
+- 你测试的 URL(All2App 本身的网址,或你封装的目标网站)。
 - 复现步骤,以及你的平台 / 浏览器。
 
 ## 行为准则

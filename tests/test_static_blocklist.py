@@ -37,7 +37,7 @@ class SensitivePathTests(unittest.TestCase):
 
     def test_suffix_rules(self):
         for path in (
-            "/webtoapp.env",
+            "/all2app.env",
             "/deep/nested/backup.bak",
             "/data.sqlite3",
             "/debug.log",
@@ -117,7 +117,7 @@ class MiddlewareWiringTests(unittest.TestCase):
         self.assertEqual(self._status_for("//generated/abc/recipe.json"), 404)
 
     def test_plain_sensitive_path_is_hard_404(self):
-        self.assertEqual(self._status_for("/webtoapp.env"), 404)
+        self.assertEqual(self._status_for("/all2app.env"), 404)
 
     def test_homepage_still_serves(self):
         self.assertEqual(self._status_for("/index.html"), 200)

@@ -1,36 +1,36 @@
 /* ============================================================
-   WebToApp — shared UI feedback helpers (toast + confirm).
+   All2App — shared UI feedback helpers (toast + confirm).
    Self-contained so it works on the main page and on the
    generated download pages (which do not load css/style.css).
-   Exposes window.WtaUI = { toast, confirm }.
+   Exposes window.A2AUI = { toast, confirm }.
    ============================================================ */
 (function () {
   'use strict';
-  if (window.WtaUI) return;
+  if (window.A2AUI) return;
 
-  var STYLE_ID = 'wta-ui-style';
+  var STYLE_ID = 'a2a-ui-style';
   var CSS = [
-    '.wta-toast-stack{position:fixed;left:50%;bottom:max(20px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:1000;display:flex;flex-direction:column;align-items:center;gap:8px;width:min(92vw,420px);pointer-events:none}',
-    '.wta-toast{pointer-events:auto;display:flex;align-items:center;gap:10px;width:100%;padding:10px 10px 10px 14px;border-radius:12px;border:1px solid var(--line-strong,rgba(30,25,20,.12));background:var(--paper-strong,#fbf8f3);color:var(--ink,#1e1914);font:400 .92rem/1.45 var(--font-sans,-apple-system,BlinkMacSystemFont,sans-serif);box-shadow:var(--shadow-pop,0 8px 28px -12px rgba(30,25,20,.18));opacity:0;transform:translateY(6px);transition:opacity .16s ease,transform .16s ease}',
-    '.wta-toast.is-in{opacity:1;transform:none}',
-    '.wta-toast::before{content:"";flex:none;width:8px;height:8px;border-radius:50%;background:var(--accent,#c97953)}',
-    '.wta-toast[data-type=success]::before{background:var(--success,#4f715a)}',
-    '.wta-toast[data-type=error]{border-color:rgba(var(--danger-rgb,160,83,61),.35)}',
-    '.wta-toast[data-type=error]::before{background:var(--danger,#a0533d)}',
-    '.wta-toast-msg{flex:1;min-width:0;overflow-wrap:anywhere}',
-    '.wta-toast-close{flex:none;display:grid;place-items:center;width:28px;height:28px;padding:0;border:0;border-radius:6px;background:transparent;color:var(--ink-faint,rgba(30,25,20,.5));font-size:1.1rem;line-height:1;cursor:pointer;transition:background .16s ease,color .16s ease}',
-    '.wta-toast-close:hover{background:var(--paper-deep,rgba(30,25,20,.06));color:var(--ink,#1e1914)}',
-    '.wta-confirm{position:fixed;inset:0;z-index:1001;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--scrim,rgba(30,25,20,.32))}',
-    '.wta-confirm-card{width:min(400px,100%);padding:24px;border-radius:16px;border:1px solid var(--line,rgba(30,25,20,.1));background:var(--paper-strong,#fbf8f3);color:var(--ink,#1e1914);box-shadow:var(--shadow-pop,0 8px 28px -12px rgba(30,25,20,.18));font:400 .95rem/1.55 var(--font-sans,-apple-system,BlinkMacSystemFont,sans-serif)}',
-    '.wta-confirm-msg{margin:0 0 20px;overflow-wrap:anywhere}',
-    '.wta-confirm-actions{display:flex;justify-content:flex-end;gap:8px}',
-    '.wta-confirm-actions button{min-height:36px;padding:0 14px;border-radius:8px;border:1px solid var(--line-strong,rgba(30,25,20,.16));background:transparent;color:var(--ink,#1e1914);font:500 .9rem var(--font-sans,-apple-system,BlinkMacSystemFont,sans-serif);cursor:pointer;transition:background .16s ease,border-color .16s ease}',
-    '.wta-confirm-actions button:hover{background:var(--paper-deep,rgba(30,25,20,.06))}',
-    '.wta-confirm-actions .wta-confirm-ok{border-color:var(--ink,#1e1914);background:var(--ink,#1e1914);color:var(--on-ink,#fbf8f3)}',
-    '.wta-confirm-actions .wta-confirm-ok:hover{border-color:var(--ink-hover,#2e2620);background:var(--ink-hover,#2e2620)}',
-    '.wta-confirm-actions .wta-confirm-ok.is-danger,.wta-confirm-actions .wta-confirm-ok.is-danger:hover{border-color:var(--danger,#a0533d);background:var(--danger,#a0533d)}',
-    '.wta-confirm-actions button:focus-visible,.wta-toast-close:focus-visible{outline:2px solid var(--accent,#c97953);outline-offset:2px}',
-    '@media (prefers-reduced-motion:reduce){.wta-toast{transition:none}}'
+    '.a2a-toast-stack{position:fixed;left:50%;bottom:max(20px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:1000;display:flex;flex-direction:column;align-items:center;gap:8px;width:min(92vw,420px);pointer-events:none}',
+    '.a2a-toast{pointer-events:auto;display:flex;align-items:center;gap:10px;width:100%;padding:10px 10px 10px 14px;border-radius:12px;border:1px solid var(--line-strong,rgba(30,25,20,.12));background:var(--paper-strong,#fbf8f3);color:var(--ink,#1e1914);font:400 .92rem/1.45 var(--font-sans,-apple-system,BlinkMacSystemFont,sans-serif);box-shadow:var(--shadow-pop,0 8px 28px -12px rgba(30,25,20,.18));opacity:0;transform:translateY(6px);transition:opacity .16s ease,transform .16s ease}',
+    '.a2a-toast.is-in{opacity:1;transform:none}',
+    '.a2a-toast::before{content:"";flex:none;width:8px;height:8px;border-radius:50%;background:var(--accent,#c97953)}',
+    '.a2a-toast[data-type=success]::before{background:var(--success,#4f715a)}',
+    '.a2a-toast[data-type=error]{border-color:rgba(var(--danger-rgb,160,83,61),.35)}',
+    '.a2a-toast[data-type=error]::before{background:var(--danger,#a0533d)}',
+    '.a2a-toast-msg{flex:1;min-width:0;overflow-wrap:anywhere}',
+    '.a2a-toast-close{flex:none;display:grid;place-items:center;width:28px;height:28px;padding:0;border:0;border-radius:6px;background:transparent;color:var(--ink-faint,rgba(30,25,20,.5));font-size:1.1rem;line-height:1;cursor:pointer;transition:background .16s ease,color .16s ease}',
+    '.a2a-toast-close:hover{background:var(--paper-deep,rgba(30,25,20,.06));color:var(--ink,#1e1914)}',
+    '.a2a-confirm{position:fixed;inset:0;z-index:1001;display:flex;align-items:center;justify-content:center;padding:20px;background:var(--scrim,rgba(30,25,20,.32))}',
+    '.a2a-confirm-card{width:min(400px,100%);padding:24px;border-radius:16px;border:1px solid var(--line,rgba(30,25,20,.1));background:var(--paper-strong,#fbf8f3);color:var(--ink,#1e1914);box-shadow:var(--shadow-pop,0 8px 28px -12px rgba(30,25,20,.18));font:400 .95rem/1.55 var(--font-sans,-apple-system,BlinkMacSystemFont,sans-serif)}',
+    '.a2a-confirm-msg{margin:0 0 20px;overflow-wrap:anywhere}',
+    '.a2a-confirm-actions{display:flex;justify-content:flex-end;gap:8px}',
+    '.a2a-confirm-actions button{min-height:36px;padding:0 14px;border-radius:8px;border:1px solid var(--line-strong,rgba(30,25,20,.16));background:transparent;color:var(--ink,#1e1914);font:500 .9rem var(--font-sans,-apple-system,BlinkMacSystemFont,sans-serif);cursor:pointer;transition:background .16s ease,border-color .16s ease}',
+    '.a2a-confirm-actions button:hover{background:var(--paper-deep,rgba(30,25,20,.06))}',
+    '.a2a-confirm-actions .a2a-confirm-ok{border-color:var(--ink,#1e1914);background:var(--ink,#1e1914);color:var(--on-ink,#fbf8f3)}',
+    '.a2a-confirm-actions .a2a-confirm-ok:hover{border-color:var(--ink-hover,#2e2620);background:var(--ink-hover,#2e2620)}',
+    '.a2a-confirm-actions .a2a-confirm-ok.is-danger,.a2a-confirm-actions .a2a-confirm-ok.is-danger:hover{border-color:var(--danger,#a0533d);background:var(--danger,#a0533d)}',
+    '.a2a-confirm-actions button:focus-visible,.a2a-toast-close:focus-visible{outline:2px solid var(--accent,#c97953);outline-offset:2px}',
+    '@media (prefers-reduced-motion:reduce){.a2a-toast{transition:none}}'
   ].join('\n');
 
   function ensureStyle() {
@@ -54,7 +54,7 @@
     if (stack && document.body.contains(stack)) return stack;
     ensureStyle();
     stack = document.createElement('div');
-    stack.className = 'wta-toast-stack';
+    stack.className = 'a2a-toast-stack';
     stack.setAttribute('role', 'status');
     stack.setAttribute('aria-live', 'polite');
     document.body.appendChild(stack);
@@ -69,15 +69,15 @@
     while (host.children.length >= 3) host.removeChild(host.firstChild);
 
     var el = document.createElement('div');
-    el.className = 'wta-toast';
+    el.className = 'a2a-toast';
     el.setAttribute('data-type', type);
     if (type === 'error') el.setAttribute('role', 'alert');
     var msg = document.createElement('span');
-    msg.className = 'wta-toast-msg';
+    msg.className = 'a2a-toast-msg';
     msg.textContent = String(message == null ? '' : message);
     var close = document.createElement('button');
     close.type = 'button';
-    close.className = 'wta-toast-close';
+    close.className = 'a2a-toast-close';
     close.setAttribute('aria-label', label('ui.close', 'Close'));
     close.textContent = '\u00d7';
     el.appendChild(msg);
@@ -105,25 +105,25 @@
     return new Promise(function (resolve) {
       var previous = document.activeElement;
       var overlay = document.createElement('div');
-      overlay.className = 'wta-confirm';
+      overlay.className = 'a2a-confirm';
       var card = document.createElement('div');
-      card.className = 'wta-confirm-card';
+      card.className = 'a2a-confirm-card';
       card.setAttribute('role', 'alertdialog');
       card.setAttribute('aria-modal', 'true');
       var msg = document.createElement('p');
-      msg.className = 'wta-confirm-msg';
-      msg.id = 'wta-confirm-msg-' + Date.now();
+      msg.className = 'a2a-confirm-msg';
+      msg.id = 'a2a-confirm-msg-' + Date.now();
       msg.textContent = String(message == null ? '' : message);
       card.setAttribute('aria-describedby', msg.id);
       var actions = document.createElement('div');
-      actions.className = 'wta-confirm-actions';
+      actions.className = 'a2a-confirm-actions';
       var cancel = document.createElement('button');
       cancel.type = 'button';
-      cancel.className = 'wta-confirm-cancel';
+      cancel.className = 'a2a-confirm-cancel';
       cancel.textContent = opts.cancelText || label('ui.cancel', 'Cancel');
       var ok = document.createElement('button');
       ok.type = 'button';
-      ok.className = 'wta-confirm-ok' + (opts.danger ? ' is-danger' : '');
+      ok.className = 'a2a-confirm-ok' + (opts.danger ? ' is-danger' : '');
       ok.textContent = opts.okText || label('ui.confirm', 'OK');
       actions.appendChild(cancel);
       actions.appendChild(ok);
@@ -158,5 +158,5 @@
     });
   }
 
-  window.WtaUI = { toast: toast, confirm: confirmDialog };
+  window.A2AUI = { toast: toast, confirm: confirmDialog };
 })();

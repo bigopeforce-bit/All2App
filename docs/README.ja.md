@@ -1,21 +1,18 @@
 <div align="center">
 
-<img src="../assets/site-logo.jpg" alt="WebToApp" width="120" height="120" style="border-radius: 24px;">
+<img src="../assets/site-logo.jpg" alt="All2App" width="120" height="120" style="border-radius: 24px;">
 
-# WebToApp
+# All2App
 
 **あらゆるウェブサイトを、数秒でインストール可能なアプリに。**
 
 リンクを一つ入れるだけで、**iPhone / iPad · Android · Windows · macOS · Linux** 向けの完成品が出てきます——さらに公開アプリマーケット、クリエイタープロフィール、コメントと評価付き。登録は不要です。
 
-[![ライブデモ](https://img.shields.io/badge/ライブデモ-shiaho.sbs-c97953?style=for-the-badge)](https://shiaho.sbs)
-[![CI](https://img.shields.io/badge/CI-pytest%20336-059669?style=for-the-badge)](https://github.com/shiaho777/WebToApp/actions)
+[![CI](https://img.shields.io/badge/CI-pytest%20336-059669?style=for-the-badge)](https://github.com/bigopeforce-bit/All2App/actions)
 [![ライセンス: MIT](https://img.shields.io/badge/License-MIT-1e1914?style=for-the-badge)](../LICENSE)
 [![プラットフォーム](https://img.shields.io/badge/プラットフォーム-5-736357?style=for-the-badge)](#生成されるもの)
 
 [English](../README.md) · [简体中文](README.zh.md) · **日本語** · [العربية](README.ar.md) · [Русский](README.ru.md) · [Español](README.es.md) · [Português](README.pt.md) · [Français](README.fr.md) · [Deutsch](README.de.md)
-
-QQ グループ **947508787**
 
 </div>
 
@@ -26,8 +23,6 @@ QQ グループ **947508787**
 URL を入力——または自分の `.html` / `.zip` をアップロード——するだけで、数秒後に全プラットフォーム対応のインストール可能な成果物が得られます。各成果物はサイトを指す薄いネイティブシェルなので、サイズは **MB ではなく KB** 単位。ダウンロードもインストールもほぼ一瞬です。
 
 生成されたアプリはすべて専用のダウンロードページ `/a/<id>` を持ちます：プラットフォーム別インストール項目、クリエイターが内容を書き込める折りたたみ式「このページについて」、そしてコメントと星評価のコミュニティレイヤー。公開リンクとして発行すれば、**アプリマーケット**にも掲載されます。
-
-オープンソース · 無料 · 登録不要。ライブで試す：**[shiaho.sbs](https://shiaho.sbs)**。
 
 ---
 
@@ -172,9 +167,9 @@ http://127.0.0.1:8000 を開きます。
 本番では systemd 下で Nginx リバースプロキシの後ろに置くのが一般的です：
 
 ```ini
-# /etc/systemd/system/webtoapp.service
+# /etc/systemd/system/all2app.service
 [Unit]
-Description=WebToApp
+Description=All2App
 After=network.target
 
 [Service]

@@ -85,13 +85,13 @@ def test_immersive_mode_handles_edge_to_edge_enforcement():
 #
 # window.android.downloadFile does not exist in our APK, and DownloadManager
 # cannot fetch blob:/data: URLs, so page-side exports failed silently. The
-# template now exposes window.WebToApp.saveFile and resolves blob:/data:
+# template now exposes window.All2App.saveFile and resolves blob:/data:
 # downloads natively. Like the file-chooser guards above, these assert the
 # load-bearing source pieces stay intact (the template compiles far away).
 
 
 def test_export_bridge_is_registered():
-    assert 'addJavascriptInterface(new WebAppBridge(), "WebToApp")' in ACTIVITY_JAVA
+    assert 'addJavascriptInterface(new WebAppBridge(), "All2App")' in ACTIVITY_JAVA
     assert "import android.webkit.JavascriptInterface;" in ACTIVITY_JAVA
     assert "@JavascriptInterface public void saveFile(" in ACTIVITY_JAVA
     assert "@JavascriptInterface public void onExportFailed(" in ACTIVITY_JAVA
@@ -120,7 +120,7 @@ def test_blob_and_data_downloads_resolved_natively():
         "private void resolveBlobDownload", 1)[0]
     js = "".join(re.findall(r'"((?:[^"\\]|\\.)*)"', block))
     assert '"' not in js
-    assert "fetch(u)" in js and "WebToApp.saveFile" in js
+    assert "fetch(u)" in js and "All2App.saveFile" in js
 
 
 def test_download_failures_are_visible():
@@ -149,17 +149,20 @@ def _u16pool(s: str) -> bytes:
     return struct.pack("<H", len(s)) + s.encode("utf-16-le") + b"\x00\x00"
 
 
+_POOL_STRINGS = ["com.all2app.template", "All2App Template", "versionCode", "versionName", "1.0", "2.0"]
+_POOL_ENTRIES = [_u16pool(s) for s in _POOL_STRINGS]
+_POOL_OFFSETS = []
+_offset = 0
+for _entry in _POOL_ENTRIES:
+    _POOL_OFFSETS.append(_offset)
+    _offset += len(_entry)
+
 _AXML_FIXTURE = (
     b"\x03\x00\x0c\x00\x8c\x0b\x00\x00"  # RES_XML doc header: type 3, size 3004
     b"\x01\x00\x1c\x00\x84\x04\x00\x00"  # string pool: type 1, header 28
     + struct.pack("<IIIII", 6, 0, 0, 52, 0)  # stringsStart: 28 header + 6*4 offsets
-    + struct.pack("<6I", 0, 46, 84, 110, 136, 146)
-    + _u16pool("com.webtoapp.template")
-    + _u16pool("WebToApp Template")
-    + _u16pool("versionCode")
-    + _u16pool("versionName")
-    + _u16pool("1.0")
-    + _u16pool("2.0")
+    + struct.pack("<6I", *_POOL_OFFSETS)
+    + b"".join(_POOL_ENTRIES)
     + b"\x00" * 2  # pool padding to 4-byte boundary
     # START_ELEMENT for <manifest>: type 0x0102, header 16, size 96;
     # attrExt: ns, name, attrStart=20, attrSize=20, attrCount=4, next=0, ...
@@ -174,9 +177,9 @@ _AXML_FIXTURE = (
     + b"\xff\xff\xff\xff" + struct.pack("<I", 3) + struct.pack("<I", 4)
     + struct.pack("<II", 0x03000008, 4)  # versionName = "1.0" (STRING)
     + b"\xff\xff\xff\xff" + struct.pack("<I", 0) + b"\xff\xff\xff\xff"
-    + struct.pack("<II", 0x03000008, 0)  # package = "com.webtoapp.template"
+    + struct.pack("<II", 0x03000008, 0)  # package = "com.all2app.template"
     + b"\xff\xff\xff\xff" + struct.pack("<I", 1) + b"\xff\xff\xff\xff"
-    + struct.pack("<II", 0x03000008, 1)  # label = "WebToApp Template"
+    + struct.pack("<II", 0x03000008, 1)  # label = "All2App Template"
 )
 
 
@@ -184,11 +187,11 @@ def test_axml_patcher_swaps_pool_strings_and_version_code():
     from server.engine.apk_builder import _AxmlPatcher
 
     patched = _AxmlPatcher(_AXML_FIXTURE).patch(
-        {"com.webtoapp.template": "com.webtoapp.ae877d6c2", "WebToApp Template": "Sdk36Verify"},
+        {"com.all2app.template": "com.all2app.ae877d6c2", "All2App Template": "Sdk36Verify"},
         version_code=42,
     )
     strings = _AxmlPatcher(patched)._string_pool(patched)
-    assert strings[0] == "com.webtoapp.ae877d6c2"
+    assert strings[0] == "com.all2app.ae877d6c2"
     assert strings[1] == "Sdk36Verify"
     # untouched entries keep their pool slots
     assert strings[4] == "1.0" and strings[5] == "2.0"
@@ -203,4 +206,4 @@ def test_axml_patcher_rejects_utf8_pool():
     # pools with 1<<8 in that 32-bit little-endian field.
     struct.pack_into("<I", utf8_flagged, 24, struct.unpack_from("<I", utf8_flagged, 24)[0] | 0x100)
     with pytest.raises(ValueError):
-        _AxmlPatcher(bytes(utf8_flagged)).patch({"com.webtoapp.template": "com.webtoapp.ae877d6c2"}, version_code=2)
+        _AxmlPatcher(bytes(utf8_flagged)).patch({"com.all2app.template": "com.all2app.ae877d6c2"}, version_code=2)

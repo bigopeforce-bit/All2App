@@ -4,7 +4,7 @@ Guidance for coding agents (and humans using them) working in this repository.
 
 ## Project overview
 
-WebToApp turns any website into installable apps (iOS / Android / Windows / macOS / Linux).
+All2App turns any website into installable apps (iOS / Android / Windows / macOS / Linux).
 - Backend: Python 3.10+ · FastAPI · Uvicorn (`server/`).
 - Frontend: plain HTML / CSS / JS served statically (`index.html`, `css/`, `js/`).
 - APK toolchain: Android SDK (aapt2 / d8 / apksigner / zipalign) + JDK + openssl
@@ -62,7 +62,7 @@ daily, zero-signal fast reclaim, disk watermark, tool timeouts) are configured
 via env — see `.env.example`. At the OS/proxy layer, also apply:
 
 ```ini
-# systemd unit override (systemctl edit webtoapp):
+# systemd unit override (systemctl edit all2app):
 [Service]
 CPUQuota=150%
 MemoryMax=1500M
@@ -71,9 +71,9 @@ Nice=10
 
 ```nginx
 # nginx http {}: limit build submissions at the proxy, before Python sees them
-limit_req_zone $binary_remote_addr zone=wta_build:10m rate=10r/m;
+limit_req_zone $binary_remote_addr zone=a2a_build:10m rate=10r/m;
 # server/location for /api/distill and /api/distill/html:
-limit_req zone=wta_build burst=20 nodelay;
+limit_req zone=a2a_build burst=20 nodelay;
 ```
 
 ## Overrides

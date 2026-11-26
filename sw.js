@@ -1,4 +1,4 @@
-/* WebToApp main-site shell cache.
+/* All2App main-site shell cache.
    Repeat visits should paint instantly, not wait for the CDN round-trip.
    This worker caches the entry HTML and the static shell assets only.
    API calls, generated app pages and download pages always go to the network. */
@@ -7,8 +7,8 @@
 // v3: the retention notice reverted to 30 days and the 72-hour line was
 // dropped from announcements.js. Bumping the bucket is what actually makes
 // installed clients drop the old shell HTML + the cached notice file they
-// were still serving from wta-shell-v2.
-const CACHE_NAME = 'wta-shell-v3';
+// were still serving from a2a-shell-v2.
+const CACHE_NAME = 'a2a-shell-v4';
 const SHELL_KEY = '/';
 const SHELL_ASSET_PREFIXES = ['/css/', '/js/', '/assets/'];
 const SHELL_ASSET_FILES = ['/manifest.webmanifest'];
@@ -35,7 +35,7 @@ self.addEventListener('activate', (event) => {
     caches.keys()
       .then((keys) => Promise.all(
         keys
-          .filter((key) => key.indexOf('wta-shell-') === 0 && key !== CACHE_NAME)
+          .filter((key) => key.indexOf('a2a-shell-') === 0 && key !== CACHE_NAME)
           .map((key) => caches.delete(key))
       ))
       .then(() => pruneStaleAssets())

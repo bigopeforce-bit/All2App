@@ -1,10 +1,10 @@
 <div align="center">
 
-# WebToApp — Deployment Guide
+# All2App — Deployment Guide
 
 **English** · [简体中文](DEPLOY.zh.md) · [日本語](DEPLOY.ja.md) · [العربية](DEPLOY.ar.md) · [Русский](DEPLOY.ru.md) · [Español](DEPLOY.es.md) · [Português](DEPLOY.pt.md) · [Français](DEPLOY.fr.md) · [Deutsch](DEPLOY.de.md)
 
-A step-by-step guide to running WebToApp in production.
+A step-by-step guide to running All2App in production.
 
 </div>
 
@@ -42,8 +42,8 @@ The only hard dependency is Python. Everything else is optional and degrades gra
 ## 2. Get the code
 
 ```bash
-git clone https://github.com/shiaho777/WebToApp.git
-cd WebToApp
+git clone https://github.com/bigopeforce-bit/All2App.git
+cd All2App
 ```
 
 ## 3. Python environment
@@ -68,7 +68,7 @@ cp .env.example .env
 | Variable | Purpose | Default |
 | --- | --- | --- |
 | `PUBLIC_BASE_URL` | Public origin, e.g. `https://app.example.com`. Required in production so iPhones don't try to open `localhost`. | inferred from Host header |
-| `ANDROID_PACKAGE_PREFIX` | Default Android package prefix. | `com.webtoapp` |
+| `ANDROID_PACKAGE_PREFIX` | Default Android package prefix. | `com.all2app` |
 | `ANDROID_KEYSTORE_DIR` | Where per-app signing keystores live. Keep it OUTSIDE any public path. | `certs/app-keys` |
 | `DAILY_BUILD_QUOTA` | Per-device daily build limit (`0` disables). | `10` |
 | `IOS_CERT_FILE` / `IOS_KEY_FILE` / `IOS_CHAIN_FILE` | Public-CA cert to sign iOS profiles. | unset (unsigned, still installable) |
@@ -99,7 +99,7 @@ Open <http://127.0.0.1:8000>. The first build downloads the Android SDK from `dl
 
 What is kept:
 
-- volume `webtoapp-generated` — apps, history and the community database
+- volume `all2app-generated` — apps, history and the community database
 - `./certs` — per-app Android keystores, plus optional iOS PEM files (`ios-cert.pem`, `ios-key.pem`, `ios-chain.pem`)
 
 Put Nginx, Caddy or your panel in front of port 8000. The container trusts reverse proxies on private addresses for `X-Forwarded-*`. If the proxy uses some other address, set `DOCKER_TRUSTED_PROXY_CIDRS` in `.env`.
@@ -124,21 +124,21 @@ the app then stops at an account that can only touch `generated/`, `certs/`
 and the APK template/tools caches.
 
 ```bash
-sudo useradd -r -s /sbin/nologin -d /var/lib/webtoapp -M webtoapp
-sudo mkdir -p /var/lib/webtoapp/.local/share /var/lib/webtoapp/.cache
-sudo chown -R webtoapp:webtoapp /var/lib/webtoapp
+sudo useradd -r -s /sbin/nologin -d /var/lib/all2app -M all2app
+sudo mkdir -p /var/lib/all2app/.local/share /var/lib/all2app/.cache
+sudo chown -R all2app:all2app /var/lib/all2app
 # Writable paths the service needs (adjust to your deploy root):
-sudo chown -R webtoapp:webtoapp \
-  /path/to/WebToApp/generated \
-  /path/to/WebToApp/certs \
-  /path/to/WebToApp/server/engine/_android_template \
-  /path/to/WebToApp/server/engine/_android_tools
+sudo chown -R all2app:all2app \
+  /path/to/All2App/generated \
+  /path/to/All2App/certs \
+  /path/to/All2App/server/engine/_android_template \
+  /path/to/All2App/server/engine/_android_tools
 ```
 
 Keep secrets in a locked-down environment file instead of inline in the unit:
 
 ```bash
-# /path/to/WebToApp/webtoapp.env  (chmod 600)
+# /path/to/All2App/all2app.env  (chmod 600)
 PUBLIC_BASE_URL=https://your-domain.com
 # Shared secret for GET /api/metrics (unset = loopback-only access)
 METRICS_TOKEN=change-me
@@ -146,27 +146,27 @@ METRICS_TOKEN=change-me
 ```
 
 ```ini
-# /etc/systemd/system/webtoapp.service
+# /etc/systemd/system/all2app.service
 [Unit]
-Description=WebToApp
+Description=All2App
 After=network.target
 
 [Service]
-User=webtoapp
-Group=webtoapp
-WorkingDirectory=/path/to/WebToApp
-EnvironmentFile=/path/to/WebToApp/webtoapp.env
-Environment=HOME=/var/lib/webtoapp
-Environment=XDG_DATA_HOME=/var/lib/webtoapp/.local/share
-Environment=XDG_CACHE_HOME=/var/lib/webtoapp/.cache
-ExecStart=/path/to/WebToApp/venv/bin/uvicorn server.main:app --host 127.0.0.1 --port 8000 --workers 1
+User=all2app
+Group=all2app
+WorkingDirectory=/path/to/All2App
+EnvironmentFile=/path/to/All2App/all2app.env
+Environment=HOME=/var/lib/all2app
+Environment=XDG_DATA_HOME=/var/lib/all2app/.local/share
+Environment=XDG_CACHE_HOME=/var/lib/all2app/.cache
+ExecStart=/path/to/All2App/venv/bin/uvicorn server.main:app --host 127.0.0.1 --port 8000 --workers 1
 Restart=always
 RestartSec=5
 # ---- hardening ----
 NoNewPrivileges=yes
 PrivateTmp=yes
 ProtectSystem=strict
-ReadWritePaths=/path/to/WebToApp
+ReadWritePaths=/path/to/All2App
 ProtectHome=yes
 ProtectKernelTunables=yes
 ProtectControlGroups=yes
@@ -179,22 +179,22 @@ LockPersonality=yes
 WantedBy=multi-user.target
 ```
 
-> **HOME must point somewhere writable** (`/var/lib/webtoapp` above), and the
+> **HOME must point somewhere writable** (`/var/lib/all2app` above), and the
 > project root itself should stay owned by root. apktool needs to create
 > `~/.local/share/apktool` even when only *decoding*; when it cannot, it
 > fails **silently** — decoded manifests come back with empty attribute
 > values and every APK build falls back to the PWA ZIP. `ProtectHome=yes` is
 > unaffected: it fences off `/home`, `/root` and `/run/user`, not
-> `/var/lib/webtoapp`.
+> `/var/lib/all2app`.
 >
 > Keep `--workers 1`. The build queue and in-memory rate limiter assume a
 > single process.
 
 ```bash
-sudo chmod 600 /path/to/WebToApp/webtoapp.env
+sudo chmod 600 /path/to/All2App/all2app.env
 sudo systemctl daemon-reload
-sudo systemctl enable --now webtoapp
-sudo systemctl status webtoapp
+sudo systemctl enable --now all2app
+sudo systemctl status all2app
 # Smoke-test a real build afterwards; "android.apk" must be present:
 #   curl -s http://127.0.0.1:8000/healthz
 ```
@@ -233,10 +233,10 @@ iOS Web Clips and `.mobileconfig` profiles require HTTPS. Two common options:
 
 ```bash
 cloudflared tunnel login
-cloudflared tunnel create webtoapp
+cloudflared tunnel create all2app
 # route a hostname to the tunnel, then point it at http://127.0.0.1:8000
-cloudflared tunnel route dns webtoapp your-domain.com
-cloudflared tunnel run webtoapp
+cloudflared tunnel route dns all2app your-domain.com
+cloudflared tunnel run all2app
 ```
 
 **Option B — Let's Encrypt on Nginx:**
@@ -312,15 +312,15 @@ If any R2 variable is unset, the whole feature becomes a no-op and downloads are
 
 ### Setup
 
-1. In the Cloudflare dashboard, open **R2** and create a bucket, e.g. `webtoapp-downloads`.
+1. In the Cloudflare dashboard, open **R2** and create a bucket, e.g. `all2app-downloads`.
 2. **Manage R2 API Tokens → Create API Token** with **Object Read & Write**. Copy the **Access Key ID** and **Secret Access Key** (the secret is shown only once).
 3. Make the bucket public: bucket **Settings → Public access**. Either enable the **r2.dev** development URL (`https://pub-xxxx.r2.dev`) for a quick start, or add a **Custom Domain** (e.g. `files.example.com`) to also get edge caching.
    > A custom domain must be on a domain managed by **the same Cloudflare account** as the bucket.
-4. Set the five variables in `webtoapp.env`:
+4. Set the five variables in `all2app.env`:
 
    ```bash
    R2_ACCOUNT_ID=...            # your account ID (hex)
-   R2_BUCKET=webtoapp-downloads
+   R2_BUCKET=all2app-downloads
    R2_ACCESS_KEY_ID=...
    R2_SECRET_ACCESS_KEY=...
    R2_PUBLIC_BASE_URL=https://pub-xxxx.r2.dev   # or https://files.example.com
@@ -334,7 +334,7 @@ If any R2 variable is unset, the whole feature becomes a no-op and downloads are
 Apps built before R2 was enabled still point at local files. Upload their artifacts to R2 and update their `downloads_cdn` in one pass:
 
 ```bash
-set -a; . ./webtoapp.env; set +a
+set -a; . ./all2app.env; set +a
 venv/bin/python -m server.scripts.backfill_r2 --dry-run   # preview
 venv/bin/python -m server.scripts.backfill_r2             # run for real
 ```
@@ -347,7 +347,7 @@ The script is idempotent — safe to re-run.
 git pull
 source venv/bin/activate
 pip install -r server/requirements.txt   # if dependencies changed
-sudo systemctl restart webtoapp
+sudo systemctl restart all2app
 ```
 
 If you changed frontend assets (`css/`, `js/`), bump the `?v=` query string in `index.html` so browsers fetch the new files instead of cached ones.
@@ -360,7 +360,7 @@ If you changed frontend assets (`css/`, `js/`), bump the `?v=` query string in `
 | Android download is a PWA zip, not an APK | Android SDK / apktool not installed on the server (see §9). |
 | Downloads still served from origin | An `R2_*` variable is missing, or you didn't restart after setting them. Run the backfill for old apps (§11). |
 | iOS profile shows "Unverified" | Profile is unsigned. Provide a public-CA cert (§10). |
-| `502 Bad Gateway` | The service isn't running or the port is wrong — `systemctl status webtoapp`. |
+| `502 Bad Gateway` | The service isn't running or the port is wrong — `systemctl status all2app`. |
 | Docker build fails while downloading the SDK | The host cannot reach `dl.google.com` or GitHub. Use `WITH_ANDROID=0 docker compose up -d --build`, or retry when outbound access works. |
 | Build endpoint returns `429` | Per-device daily quota or per-IP rate limit hit. Tune `DAILY_BUILD_QUOTA`. |
 

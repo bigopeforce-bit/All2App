@@ -1,10 +1,10 @@
 <div align="center">
 
-# WebToApp — دليل النشر
+# All2App — دليل النشر
 
 [English](DEPLOY.md) · [简体中文](DEPLOY.zh.md) · [日本語](DEPLOY.ja.md) · **العربية** · [Русский](DEPLOY.ru.md) · [Español](DEPLOY.es.md) · [Português](DEPLOY.pt.md) · [Français](DEPLOY.fr.md) · [Deutsch](DEPLOY.de.md)
 
-دليل خطوة بخطوة لتشغيل WebToApp في بيئة الإنتاج.
+دليل خطوة بخطوة لتشغيل All2App في بيئة الإنتاج.
 
 </div>
 
@@ -44,8 +44,8 @@
 </div>
 
 ```bash
-git clone https://github.com/shiaho777/WebToApp.git
-cd WebToApp
+git clone https://github.com/bigopeforce-bit/All2App.git
+cd All2App
 ```
 
 <div dir="rtl">
@@ -80,7 +80,7 @@ cp .env.example .env
 | المتغيّر | الغرض | الافتراضي |
 | --- | --- | --- |
 | `PUBLIC_BASE_URL` | الأصل العام، مثل `https://app.example.com`. مطلوب في الإنتاج وإلا حاول iPhone فتح `localhost`. | يُستنتج من ترويسة Host |
-| `ANDROID_PACKAGE_PREFIX` | بادئة حزمة أندرويد الافتراضية. | `com.webtoapp` |
+| `ANDROID_PACKAGE_PREFIX` | بادئة حزمة أندرويد الافتراضية. | `com.all2app` |
 | `ANDROID_KEYSTORE_DIR` | مكان مخازن مفاتيح التوقيع لكل تطبيق. ضعه خارج أي مسار عام. | `certs/app-keys` |
 | `DAILY_BUILD_QUOTA` | حد البناء اليومي لكل جهاز (`0` لتعطيله). | `10` |
 | `IOS_CERT_FILE` / `IOS_KEY_FILE` / `IOS_CHAIN_FILE` | شهادة CA عامة لتوقيع ملفات iOS. | غير مضبوط (غير موقّع، قابل للتثبيت) |
@@ -119,7 +119,7 @@ docker compose up -d --build
 
 ما يُحفَظ:
 
-- المجلد `webtoapp-generated` — التطبيقات والسجل وقاعدة المجتمع
+- المجلد `all2app-generated` — التطبيقات والسجل وقاعدة المجتمع
 - `./certs` — مفاتيح أندرويد لكل تطبيق وملفات PEM اختيارية لـ iOS (`ios-cert.pem` و`ios-key.pem` و`ios-chain.pem`)
 
 ضع وكيلاً عكسياً أمام المنفذ 8000. الوكلاء على عناوين خاصة يُوثَقون لترويسات `X-Forwarded-*`. وإلا فاضبط `DOCKER_TRUSTED_PROXY_CIDRS` في `.env`.
@@ -152,22 +152,22 @@ docker compose up -d --build
 </div>
 
 ```bash
-# /path/to/WebToApp/webtoapp.env  (chmod 600)
+# /path/to/All2App/all2app.env  (chmod 600)
 PUBLIC_BASE_URL=https://your-domain.com
 # أضف R2_* / IOS_* / CLOUDFLARE_* حسب الحاجة
 ```
 
 ```ini
-# /etc/systemd/system/webtoapp.service
+# /etc/systemd/system/all2app.service
 [Unit]
-Description=WebToApp
+Description=All2App
 After=network.target
 
 [Service]
 User=www-data
-WorkingDirectory=/path/to/WebToApp
-EnvironmentFile=/path/to/WebToApp/webtoapp.env
-ExecStart=/path/to/WebToApp/venv/bin/uvicorn server.main:app --host 127.0.0.1 --port 8000 --workers 1
+WorkingDirectory=/path/to/All2App
+EnvironmentFile=/path/to/All2App/all2app.env
+ExecStart=/path/to/All2App/venv/bin/uvicorn server.main:app --host 127.0.0.1 --port 8000 --workers 1
 Restart=always
 RestartSec=5
 
@@ -176,10 +176,10 @@ WantedBy=multi-user.target
 ```
 
 ```bash
-sudo chmod 600 /path/to/WebToApp/webtoapp.env
+sudo chmod 600 /path/to/All2App/all2app.env
 sudo systemctl daemon-reload
-sudo systemctl enable --now webtoapp
-sudo systemctl status webtoapp
+sudo systemctl enable --now all2app
+sudo systemctl status all2app
 ```
 
 <div dir="rtl">
@@ -226,9 +226,9 @@ sudo nginx -t && sudo systemctl reload nginx
 
 ```bash
 cloudflared tunnel login
-cloudflared tunnel create webtoapp
-cloudflared tunnel route dns webtoapp your-domain.com
-cloudflared tunnel run webtoapp
+cloudflared tunnel create all2app
+cloudflared tunnel route dns all2app your-domain.com
+cloudflared tunnel run all2app
 ```
 
 <div dir="rtl">
@@ -277,17 +277,17 @@ sudo certbot --nginx -d your-domain.com
 
 ### الإعداد
 
-1. في لوحة Cloudflare، افتح **R2** وأنشئ حاوية، مثل `webtoapp-downloads`.
+1. في لوحة Cloudflare، افتح **R2** وأنشئ حاوية، مثل `all2app-downloads`.
 2. **Manage R2 API Tokens → Create API Token** بصلاحية **Object Read & Write**. انسخ **Access Key ID** و**Secret Access Key** (يُعرض السر مرة واحدة فقط).
 3. اجعل الحاوية عامة: **Settings → Public access**. إمّا فعّل رابط التطوير **r2.dev** (‏`https://pub-xxxx.r2.dev`) للبدء السريع، أو أضف **نطاقًا مخصصًا** (مثل `files.example.com`) للحصول أيضًا على التخزين المؤقت عند الحافة.
    > يجب أن يكون النطاق المخصص ضمن نطاق يديره **نفس حساب Cloudflare** الخاص بالحاوية.
-4. اضبط المتغيّرات الخمسة في `webtoapp.env`:
+4. اضبط المتغيّرات الخمسة في `all2app.env`:
 
 </div>
 
 ```bash
 R2_ACCOUNT_ID=...            # معرّف الحساب (hex)
-R2_BUCKET=webtoapp-downloads
+R2_BUCKET=all2app-downloads
 R2_ACCESS_KEY_ID=...
 R2_SECRET_ACCESS_KEY=...
 R2_PUBLIC_BASE_URL=https://pub-xxxx.r2.dev   # أو https://files.example.com
@@ -306,7 +306,7 @@ R2_PUBLIC_BASE_URL=https://pub-xxxx.r2.dev   # أو https://files.example.com
 </div>
 
 ```bash
-set -a; . ./webtoapp.env; set +a
+set -a; . ./all2app.env; set +a
 venv/bin/python -m server.scripts.backfill_r2 --dry-run   # معاينة
 venv/bin/python -m server.scripts.backfill_r2             # تنفيذ
 ```
@@ -323,7 +323,7 @@ venv/bin/python -m server.scripts.backfill_r2             # تنفيذ
 git pull
 source venv/bin/activate
 pip install -r server/requirements.txt   # إن تغيّرت التبعيات
-sudo systemctl restart webtoapp
+sudo systemctl restart all2app
 ```
 
 <div dir="rtl">
@@ -338,7 +338,7 @@ sudo systemctl restart webtoapp
 | تنزيل أندرويد عبارة عن zip لـ PWA لا APK | لم تُثبَّت Android SDK / apktool على الخادم (§9). |
 | ما زالت التنزيلات تُقدَّم من المصدر | متغيّر `R2_*` ناقص، أو لم تُعد التشغيل بعد ضبطه. شغّل الترحيل للتطبيقات القديمة (§11). |
 | يعرض ملف iOS "غير موثّق" | الملف غير موقّع. وفّر شهادة CA عامة (§10). |
-| `502 Bad Gateway` | الخدمة لا تعمل أو المنفذ خاطئ — `systemctl status webtoapp`. |
+| `502 Bad Gateway` | الخدمة لا تعمل أو المنفذ خاطئ — `systemctl status all2app`. |
 | تُعيد نقطة البناء `429` | بلغت حصة الجهاز اليومية أو حد معدل الـ IP. اضبط `DAILY_BUILD_QUOTA`. |
 
 انظر أيضًا [README](README.ar.md) لنظرة عامة على المشروع.

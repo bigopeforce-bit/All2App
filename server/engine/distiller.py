@@ -40,13 +40,13 @@ from server.net import fetch_public_url_bytes
 # cross-compile macOS binaries, so the ad-hoc-signed universal binary is
 # committed next to its source and packed verbatim.
 _MACOS_TEMPLATE_DIR = Path(__file__).parent / "macos_template"
-_MACOS_HELPER_NAME = "wta_webview"
+_MACOS_HELPER_NAME = "a2a_webview"
 
 # Standalone-window runtime for the macOS .app launcher: a tiny JXA script that
 # opens the target URL in a real WKWebView window using only system frameworks —
 # no bundled binaries, nothing to codesign. Kept as a static string so the
 # shipped file is byte-identical to what is tested locally. The launcher feeds
-# it WTA_URL / WTA_NAME / WTA_ICON through the environment.
+# it A2A_URL / A2A_NAME / A2A_ICON through the environment.
 _MACOS_WEBVIEW_APP_JS = """\
 ObjC.import('Cocoa');
 ObjC.import('WebKit');
@@ -54,13 +54,13 @@ ObjC.import('WebKit');
 (function () {
   var env = $.NSProcessInfo.processInfo.environment;
   function envStr(key) { var v = env.objectForKey(key); return v ? v.js : ''; }
-  var url = envStr('WTA_URL');
-  var name = envStr('WTA_NAME') || 'App';
-  var iconPath = envStr('WTA_ICON');
+  var url = envStr('A2A_URL');
+  var name = envStr('A2A_NAME') || 'App';
+  var iconPath = envStr('A2A_ICON');
   if (!/^https:\\/\\//i.test(url)) {
     // App Transport Security blocks plain-http loads inside WKWebView; exit
     // non-zero so the shell launcher falls back to browser app mode.
-    throw new Error('WTA: embedded WebView requires an https target');
+    throw new Error('A2A: embedded WebView requires an https target');
   }
   var app = $.NSApplication.sharedApplication;
   app.setActivationPolicy(0); // regular app: own dock icon + menu bar presence
@@ -83,7 +83,7 @@ ObjC.import('WebKit');
   // Quit the whole app when the window closes. NSWindow does not retain its
   // delegate, so the instance must stay alive in this scope while run() spins.
   ObjC.registerSubclass({
-    name: 'WTALauncherDelegate',
+    name: 'A2ALauncherDelegate',
     methods: {
       'windowWillClose:': {
         types: ['void', ['id']],
@@ -91,7 +91,7 @@ ObjC.import('WebKit');
       }
     }
   });
-  var delegate = $.WTALauncherDelegate.alloc.init;
+  var delegate = $.A2ALauncherDelegate.alloc.init;
   win.setDelegate(delegate);
   wv.loadRequest($.NSURLRequest.requestWithURL($.NSURL.URLWithString(url)));
   win.makeKeyAndOrderFront(null);
@@ -192,7 +192,7 @@ def _bundle_id_part(value, default="app") -> str:
 
 
 class Distiller:
-    DOWNLOAD_PAGE_MARKER = "<!-- WebToAppDownloadPage:v10-report -->"
+    DOWNLOAD_PAGE_MARKER = "<!-- All2AppDownloadPage:v10-report -->"
 
     _ANDROID_PACKAGE_PART_RE = re.compile(r"[^a-z0-9_]")
     _ANDROID_VERSION_NAME_RE = re.compile(r"[^0-9A-Za-z._-]")
@@ -289,7 +289,7 @@ class Distiller:
                 token = f"p{token}"
             parts.append(token)
         if len(parts) < 2:
-            return "com.webtoapp"
+            return "com.all2app"
         return ".".join(parts)
 
     def _custom_icon_data_url(self, options):
@@ -1134,14 +1134,14 @@ class Distiller:
                 '<p data-i18n="heroDesc">This is not an app store page, just this site\'s install entry. Pick your device, then download to install, unzip, or add to the iPhone home screen.</p>'
                 '<p data-i18n="footnote">On iPhone install via Safari; on desktop just unzip after downloading. Android ships an installer, while macOS and Windows keep the app icon.</p>'
             )
-        inline_js = f"""window.WTA_APP_ID = {_js_literal(str(r.get('id') or ''))};
+        inline_js = f"""window.A2A_APP_ID = {_js_literal(str(r.get('id') or ''))};
 (function(){{
   var T = {dl_i18n_json};
   var APP_NAME = {app_name_js};
   var SUPPORTED = ["en","zh","ja","ko","ar","ru","es","pt","fr","de"];
   var RTL = ["ar"];
   var NAMES = {{en:"English",zh:"\\u4e2d\\u6587",ja:"\\u65e5\\u672c\\u8a9e",ko:"\\ud55c\\uad6d\\uc5b4",ar:"\\u0627\\u0644\\u0639\\u0631\\u0628\\u064a\\u0629",ru:"\\u0420\\u0443\\u0441\\u0441\\u043a\\u0438\\u0439",es:"Espa\\u00f1ol",pt:"Portugu\\u00eas",fr:"Fran\\u00e7ais",de:"Deutsch"}};
-  var KEY = "webtoapp-lang-v1";
+  var KEY = "all2app-lang-v1";
   function pick(){{
     try{{ var s=localStorage.getItem(KEY); if(s&&SUPPORTED.indexOf(s)!==-1) return s; }}catch(e){{}}
     try{{
@@ -1182,10 +1182,10 @@ class Distiller:
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 {csp_meta}
-<title>{name_esc} — Download | WebToApp</title>
+<title>{name_esc} — Download | All2App</title>
 <meta name="description" content="Download the installer or config profile of {name_esc} for your device. Works on iPhone, Android, Windows, macOS and Linux.">
 <meta name="theme-color" content="{color_safe}">
-<link rel="icon" href="/assets/site-logo-96.jpg?v=20261104-brand2">
+<link rel="icon" href="/assets/site-logo-96.jpg?v=20261126-all2app1">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..800&family=Noto+Serif+SC:wght@600;700&family=Spectral:wght@600;700&display=swap" rel="stylesheet">
@@ -1381,8 +1381,8 @@ a{{color:inherit;text-decoration:none}}
 <div class="page">
   <div class="nav">
     <a class="brand" href="/">
-      <img src="/assets/site-logo-96.jpg?v=20261104-brand2" alt="WebToApp" width="28" height="28">
-      <span>WebToApp</span>
+      <img src="/assets/site-logo-96.jpg?v=20261126-all2app1" alt="All2App" width="28" height="28">
+      <span>All2App</span>
     </a>
     <div class="nav-right">
       <span class="brand-note" data-i18n="navDownload">Download</span>
@@ -1460,7 +1460,7 @@ a{{color:inherit;text-decoration:none}}
         page (10 languages). '{name}' in pageTitle is filled in by the page JS."""
         return {
             "en": {
-                "pageTitle": "{name} — Download | WebToApp",
+                "pageTitle": "{name} — Download | All2App",
                 "navDownload": "Download",
                 "eyebrow": "INSTALLATION / DOWNLOAD",
                 "aboutTitle": "About this page",
@@ -1495,7 +1495,7 @@ a{{color:inherit;text-decoration:none}}
                 "platLinuxDetail": ".tar.gz \u00b7 desktop icon included \u00b7 unzip and run",
             },
             "zh": {
-                "pageTitle": "{name} — 下载安装 | WebToApp",
+                "pageTitle": "{name} — 下载安装 | All2App",
                 "navDownload": "下载",
                 "eyebrow": "INSTALLATION / 下载页",
                 "aboutTitle": "关于本页",
@@ -1530,7 +1530,7 @@ a{{color:inherit;text-decoration:none}}
                 "platLinuxDetail": ".tar.gz · 桌面图标已内置 · 解压运行",
             },
             "ja": {
-                "pageTitle": "{name} — ダウンロード | WebToApp",
+                "pageTitle": "{name} — ダウンロード | All2App",
                 "navDownload": "ダウンロード",
                 "eyebrow": "INSTALLATION / ダウンロード",
                 "aboutTitle": "このページについて",
@@ -1565,7 +1565,7 @@ a{{color:inherit;text-decoration:none}}
                 "platLinuxDetail": ".tar.gz · デスクトップアイコン内蔵 · 解凍して実行",
             },
             "ar": {
-                "pageTitle": "{name} — تنزيل | WebToApp",
+                "pageTitle": "{name} — تنزيل | All2App",
                 "navDownload": "تنزيل",
                 "eyebrow": "INSTALLATION / التثبيت",
                 "aboutTitle": "حول هذه الصفحة",
@@ -1600,7 +1600,7 @@ a{{color:inherit;text-decoration:none}}
                 "platLinuxDetail": ".tar.gz · أيقونة سطح المكتب مدمجة · فك الضغط والتشغيل",
             },
             "ru": {
-                "pageTitle": "{name} — Скачать | WebToApp",
+                "pageTitle": "{name} — Скачать | All2App",
                 "navDownload": "Скачать",
                 "eyebrow": "INSTALLATION / УСТАНОВКА",
                 "aboutTitle": "Об этой странице",
@@ -1635,7 +1635,7 @@ a{{color:inherit;text-decoration:none}}
                 "platLinuxDetail": ".tar.gz · значок рабочего стола включён · распакуйте и запустите",
             },
             "es": {
-                "pageTitle": "{name} — Descargar | WebToApp",
+                "pageTitle": "{name} — Descargar | All2App",
                 "navDownload": "Descargar",
                 "eyebrow": "INSTALLATION / INSTALACIÓN",
                 "aboutTitle": "Acerca de esta página",
@@ -1670,7 +1670,7 @@ a{{color:inherit;text-decoration:none}}
                 "platLinuxDetail": ".tar.gz · icono de escritorio incluido · descomprime y ejecuta",
             },
             "pt": {
-                "pageTitle": "{name} — Baixar | WebToApp",
+                "pageTitle": "{name} — Baixar | All2App",
                 "navDownload": "Baixar",
                 "eyebrow": "INSTALLATION / INSTALAÇÃO",
                 "aboutTitle": "Sobre esta página",
@@ -1705,7 +1705,7 @@ a{{color:inherit;text-decoration:none}}
                 "platLinuxDetail": ".tar.gz · ícone de desktop incluído · descompacte e execute",
             },
             "fr": {
-                "pageTitle": "{name} — Télécharger | WebToApp",
+                "pageTitle": "{name} — Télécharger | All2App",
                 "navDownload": "Télécharger",
                 "eyebrow": "INSTALLATION / INSTALLATION",
                 "aboutTitle": "À propos de cette page",
@@ -1740,7 +1740,7 @@ a{{color:inherit;text-decoration:none}}
                 "platLinuxDetail": ".tar.gz · icône de bureau incluse · décompressez et exécutez",
             },
             "de": {
-                "pageTitle": "{name} — Herunterladen | WebToApp",
+                "pageTitle": "{name} — Herunterladen | All2App",
                 "navDownload": "Herunterladen",
                 "eyebrow": "INSTALLATION / INSTALLATION",
                 "aboutTitle": "Über diese Seite",
@@ -1775,7 +1775,7 @@ a{{color:inherit;text-decoration:none}}
                 "platLinuxDetail": ".tar.gz · Desktop-Icon enthalten · entpacken und ausführen",
             },
             "ko": {
-                "pageTitle": "{name} — 다운로드 | WebToApp",
+                "pageTitle": "{name} — 다운로드 | All2App",
                 "navDownload": "다운로드",
                 "eyebrow": "INSTALLATION / 다운로드",
                 "aboutTitle": "이 페이지 소개",
@@ -1935,7 +1935,7 @@ a{{color:inherit;text-decoration:none}}
   var APP_NAME = {app_name_js};
   var SUPPORTED = ["en","zh","ja","ko","ar","ru","es","pt","fr","de"];
   var RTL = ["ar"];
-  var KEY = "webtoapp-lang-v1";
+  var KEY = "all2app-lang-v1";
   var cur = (function(){{
     try{{ var s=localStorage.getItem(KEY); if(s&&SUPPORTED.indexOf(s)!==-1) return s; }}catch(e){{}}
     try{{
@@ -2081,7 +2081,7 @@ Set sc = ws.CreateShortcut(ws.SpecialFolders("Desktop") & "\\{name_fs}.lnk")
 sc.TargetPath = ws.CurrentDirectory & "\\{name_fs}.bat"
 sc.WorkingDirectory = ws.CurrentDirectory
 sc.IconLocation = ws.CurrentDirectory & "\\icon.ico"
-sc.Description = "{vbs_name} - WebToApp"
+sc.Description = "{vbs_name} - All2App"
 sc.Save
 WScript.Echo "桌面快捷方式已创建！"
 """
@@ -2097,7 +2097,7 @@ WScript.Echo "桌面快捷方式已创建！"
         n = r['name']
         n_fs = _safe_fs_name(n)
         # Launch chain, best experience first:
-        #   1. The compiled WKWebView helper (Contents/MacOS/wta_webview) — a
+        #   1. The compiled WKWebView helper (Contents/MacOS/a2a_webview) — a
         #      native window running inside our bundle identity, so the menu
         #      bar shows the app name and the bundle's ATS exceptions apply.
         #      A non-zero exit (bad target, missing frameworks on old macOS)
@@ -2111,9 +2111,9 @@ WScript.Echo "桌面快捷方式已创建！"
         launcher = f"""#!/bin/bash
 DIR="$(cd "$(dirname "$0")" && pwd)"
 RES="$DIR/../Resources"
-export WTA_URL={shlex.quote(launch_url)}
-export WTA_NAME={shlex.quote(n)}
-export WTA_ICON="$RES/AppIcon.icns"
+export A2A_URL={shlex.quote(launch_url)}
+export A2A_NAME={shlex.quote(n)}
+export A2A_ICON="$RES/AppIcon.icns"
 HELPER="$DIR/{_MACOS_HELPER_NAME}"
 if [ -x "$HELPER" ]; then
     "$HELPER"
@@ -2134,18 +2134,18 @@ CHROMIUM_APPS=(
 )
 for app in "${{CHROMIUM_APPS[@]}}"; do
     if [ -d "/Applications/$app.app" ] || [ -d "$HOME/Applications/$app.app" ]; then
-        open -na "$app" --args --app="$WTA_URL"
+        open -na "$app" --args --app="$A2A_URL"
         exit 0
     fi
 done
-open "$WTA_URL"
+open "$A2A_URL"
 """
         plist = f"""<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0"><dict>
 <key>CFBundleExecutable</key><string>launcher</string>
 <key>CFBundleName</key><string>{_xml_esc(n)}</string>
-<key>CFBundleIdentifier</key><string>com.webtoapp.{_bundle_id_part(r['id'])}</string>
+<key>CFBundleIdentifier</key><string>com.all2app.{_bundle_id_part(r['id'])}</string>
 <key>CFBundleVersion</key><string>1.0</string>
 <key>CFBundlePackageType</key><string>APPL</string>
 <key>CFBundleInfoDictionaryVersion</key><string>6.0</string>
@@ -2177,7 +2177,7 @@ open "$WTA_URL"
         desktop = f"""[Desktop Entry]
 Type=Application
 Name={_desk_line(n)}
-Comment=Distilled by WebToApp
+Comment=Distilled by All2App
 Exec=bash -c 'URL="{exec_url}"; for b in google-chrome chromium-browser microsoft-edge firefox; do command -v "$b" >/dev/null && exec "$b" --app="$URL"{linux_flags}; done; xdg-open "$URL"'
 {icon_line}
 Terminal=false
@@ -2250,14 +2250,14 @@ echo "✓ {n_fs} 已安装到应用菜单"
 <key>Label</key><string>{name_xml}</string>
 {icon_tag}
 <key>PayloadDisplayName</key><string>{name_xml}</string>
-<key>PayloadIdentifier</key><string>com.webtoapp.{id_part}.clip</string>
+<key>PayloadIdentifier</key><string>com.all2app.{id_part}.clip</string>
 <key>PayloadType</key><string>com.apple.webClip.managed</string>
 <key>PayloadUUID</key><string>{uid1}</string>
 <key>PayloadVersion</key><integer>1</integer>
 <key>URL</key><string>{clip_url_xml}</string>
 </dict></array>
 <key>PayloadDisplayName</key><string>{name_xml}</string>
-<key>PayloadIdentifier</key><string>com.webtoapp.{id_part}</string>
+<key>PayloadIdentifier</key><string>com.all2app.{id_part}</string>
 <key>PayloadRemovalDisallowed</key><false/>
 <key>PayloadType</key><string>Configuration</string>
 <key>PayloadUUID</key><string>{uid2}</string>

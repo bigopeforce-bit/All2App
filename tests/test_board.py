@@ -45,7 +45,7 @@ class BoardTests(unittest.TestCase):
         self._tmp.cleanup()
 
     def _cookies(self, fp=None):
-        return {"webtoapp_device_fingerprint": fp or self.FP}
+        return {"all2app_device_fingerprint": fp or self.FP}
 
     def _post_topic(self, tag="suggestion", body="A great idea", fp=None, files=None):
         data = {"tag": tag, "body": body}

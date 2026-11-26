@@ -1,16 +1,16 @@
-// wta_webview.m — WebToApp macOS standalone-window helper.
+// a2a_webview.m — All2App macOS standalone-window helper.
 //
-// Opens WTA_URL in a real WKWebView window while running INSIDE our own
+// Opens A2A_URL in a real WKWebView window while running INSIDE our own
 // .app bundle, so CFBundleName (menu bar), the icns icon and the bundle's
 // ATS exceptions all apply — things an osascript/JXA process can never get
 // (issue #30). Shipped as a prebuilt universal binary in every macos.zip;
 // rebuild it on any Mac with ./build.sh.
 //
 // Configuration arrives through the environment set by the bundle launcher:
-//   WTA_URL   target to load (required)
-//   WTA_NAME  window / menu-bar title
-//   WTA_ICON  absolute path to the bundle's .icns
-//   WTA_DEBUG when set, logs the resolved bundle path to stderr
+//   A2A_URL   target to load (required)
+//   A2A_NAME  window / menu-bar title
+//   A2A_ICON  absolute path to the bundle's .icns
+//   A2A_DEBUG when set, logs the resolved bundle path to stderr
 // Exit codes: 0 after a normal window session; 3 when there is no usable
 // target, so the shell launcher can fall back to older launch paths.
 
@@ -30,14 +30,14 @@ static NSString *Env(NSString *key) {
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification {
     (void)notification;
-    NSString *urlString = Env(@"WTA_URL") ?: @"";
-    NSString *name = Env(@"WTA_NAME") ?: @"App";
-    NSString *iconPath = Env(@"WTA_ICON");
+    NSString *urlString = Env(@"A2A_URL") ?: @"";
+    NSString *name = Env(@"A2A_NAME") ?: @"App";
+    NSString *iconPath = Env(@"A2A_ICON");
 
     NSURL *url = [NSURL URLWithString:urlString];
     NSString *scheme = url.scheme.lowercaseString;
     if (!(url.host && ([scheme isEqualToString:@"https"] || [scheme isEqualToString:@"http"]))) {
-        fprintf(stderr, "wta_webview: no usable WTA_URL target\n");
+        fprintf(stderr, "a2a_webview: no usable A2A_URL target\n");
         exit(3);
     }
 
@@ -71,8 +71,8 @@ static NSString *Env(NSString *key) {
     [self.webView loadRequest:[NSURLRequest requestWithURL:url]];
     [self.window makeKeyAndOrderFront:nil];
 
-    if (getenv("WTA_DEBUG")) {
-        fprintf(stderr, "wta_webview: bundle=%s url=%s\n",
+    if (getenv("A2A_DEBUG")) {
+        fprintf(stderr, "a2a_webview: bundle=%s url=%s\n",
                 NSBundle.mainBundle.bundlePath.UTF8String ?: "(none)",
                 urlString.UTF8String);
     }
