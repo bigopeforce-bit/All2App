@@ -1,21 +1,18 @@
 <div align="center">
 
-<img src="../assets/site-logo.jpg" alt="WebToApp" width="120" height="120" style="border-radius: 24px;">
+<img src="../assets/site-logo.jpg" alt="All2App" width="120" height="120" style="border-radius: 24px;">
 
-# WebToApp
+# All2App
 
 **几秒钟把任意网站变成可安装的应用。**
 
 输入一个链接，输出覆盖 **iPhone / iPad · Android · Windows · macOS · Linux** 的成品——还自带公开应用市场、创建者主页、评论和评分，全程无需注册。
 
-[![在线演示](https://img.shields.io/badge/在线演示-shiaho.sbs-c97953?style=for-the-badge)](https://shiaho.sbs)
-[![CI](https://img.shields.io/badge/CI-pytest%20336-059669?style=for-the-badge)](https://github.com/shiaho777/WebToApp/actions)
+[![CI](https://img.shields.io/badge/CI-pytest%20336-059669?style=for-the-badge)](https://github.com/bigopeforce-bit/All2App/actions)
 [![许可证: MIT](https://img.shields.io/badge/License-MIT-1e1914?style=for-the-badge)](../LICENSE)
 [![平台](https://img.shields.io/badge/平台-5-736357?style=for-the-badge)](#你能得到什么)
 
 [English](../README.md) · **简体中文** · [日本語](README.ja.md) · [العربية](README.ar.md) · [Русский](README.ru.md) · [Español](README.es.md) · [Português](README.pt.md) · [Français](README.fr.md) · [Deutsch](README.de.md)
-
-QQ 群 **947508787**
 
 </div>
 
@@ -26,8 +23,6 @@ QQ 群 **947508787**
 输入一个网址——或者上传你自己的 `.html` / `.zip`——几秒钟后得到一个覆盖全平台的可安装成品。每个产物都只是指向你站点的轻量原生壳，所以体积按 **KB 而不是 MB** 计算，下载安装几乎瞬间完成。
 
 每个生成的应用都有自己的下载页 `/a/<id>`：平台安装入口、可折叠的「关于本页」区块（创作者可以填入真实内容）、以及带评论和星级评分的社区层。以公链形式发布后，它还会出现在**应用市场**里供所有人发现。
-
-开源 · 免费 · 无需登录。在线体验：**[shiaho.sbs](https://shiaho.sbs)**。
 
 ---
 
@@ -180,9 +175,9 @@ docker compose up -d --build
 生产环境通常用 systemd 跑在 Nginx 反代之后：
 
 ```ini
-# /etc/systemd/system/webtoapp.service
+# /etc/systemd/system/all2app.service
 [Unit]
-Description=WebToApp
+Description=All2App
 After=network.target
 
 [Service]

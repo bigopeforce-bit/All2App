@@ -1,5 +1,5 @@
 /* ============================================================
-   WebToApp — Lightweight i18n runtime
+   All2App — Lightweight i18n runtime
    Zero dependencies. Loaded BEFORE app.v5.js.
 
    Usage:
@@ -17,7 +17,7 @@
 (function () {
   'use strict';
 
-  var STORE_KEY = 'webtoapp-lang-v1';
+  var STORE_KEY = 'all2app-lang-v1';
   var SUPPORTED = ['en', 'zh', 'ja', 'ko', 'ar', 'ru', 'es', 'pt', 'fr', 'de'];
   var RTL = ['ar'];
   var LOCALES = {
@@ -36,7 +36,7 @@
   // made single-language users download ~90% waste and blocked first paint.
   var TRANSLATIONS = {};
   // Bump together with the per-language files' content (cache busting).
-  var LANG_VERSION = '20261118-board1';
+  var LANG_VERSION = '20261126-all2app1';
   var loadedLangs = { en: true };
   var pendingLangs = {};
 

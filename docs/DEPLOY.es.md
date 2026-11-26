@@ -1,10 +1,10 @@
 <div align="center">
 
-# WebToApp — Guía de despliegue
+# All2App — Guía de despliegue
 
 [English](DEPLOY.md) · [简体中文](DEPLOY.zh.md) · [日本語](DEPLOY.ja.md) · [العربية](DEPLOY.ar.md) · [Русский](DEPLOY.ru.md) · **Español** · [Português](DEPLOY.pt.md) · [Français](DEPLOY.fr.md) · [Deutsch](DEPLOY.de.md)
 
-Guía paso a paso para ejecutar WebToApp en producción.
+Guía paso a paso para ejecutar All2App en producción.
 
 </div>
 
@@ -42,8 +42,8 @@ La única dependencia obligatoria es Python. Todo lo demás es opcional y degrad
 ## 2. Obtener el código
 
 ```bash
-git clone https://github.com/shiaho777/WebToApp.git
-cd WebToApp
+git clone https://github.com/bigopeforce-bit/All2App.git
+cd All2App
 ```
 
 ## 3. Entorno Python
@@ -68,7 +68,7 @@ cp .env.example .env
 | Variable | Propósito | Por defecto |
 | --- | --- | --- |
 | `PUBLIC_BASE_URL` | Origen público, p. ej. `https://app.example.com`. Obligatoria en producción o el iPhone intentará abrir `localhost`. | inferida de la cabecera Host |
-| `ANDROID_PACKAGE_PREFIX` | Prefijo de paquete Android por defecto. | `com.webtoapp` |
+| `ANDROID_PACKAGE_PREFIX` | Prefijo de paquete Android por defecto. | `com.all2app` |
 | `ANDROID_KEYSTORE_DIR` | Dónde se guardan los keystores de firma por app. Manténlo FUERA de cualquier ruta pública. | `certs/app-keys` |
 | `DAILY_BUILD_QUOTA` | Límite diario de compilaciones por dispositivo (`0` lo desactiva). | `10` |
 | `IOS_CERT_FILE` / `IOS_KEY_FILE` / `IOS_CHAIN_FILE` | Certificado de CA pública para firmar perfiles iOS. | sin definir (sin firma, igual se instala) |
@@ -99,7 +99,7 @@ Abre <http://127.0.0.1:8000>. La primera construcción descarga el SDK de Androi
 
 Qué se conserva:
 
-- el volumen `webtoapp-generated` — apps, historial y la base de la comunidad
+- el volumen `all2app-generated` — apps, historial y la base de la comunidad
 - `./certs` — keystores de Android por app y PEM de iOS opcionales (`ios-cert.pem`, `ios-key.pem`, `ios-chain.pem`)
 
 Pon un proxy inverso delante del puerto 8000. Los proxies en direcciones privadas pueden enviar `X-Forwarded-*`. Si no, define `DOCKER_TRUSTED_PROXY_CIDRS` en `.env`.
@@ -122,22 +122,22 @@ docker compose up -d --build
 Guarda los secretos en un archivo de entorno restringido en vez de en línea en la unidad:
 
 ```bash
-# /path/to/WebToApp/webtoapp.env  (chmod 600)
+# /path/to/All2App/all2app.env  (chmod 600)
 PUBLIC_BASE_URL=https://your-domain.com
 # añade R2_* / IOS_* / CLOUDFLARE_* según necesites
 ```
 
 ```ini
-# /etc/systemd/system/webtoapp.service
+# /etc/systemd/system/all2app.service
 [Unit]
-Description=WebToApp
+Description=All2App
 After=network.target
 
 [Service]
 User=www-data
-WorkingDirectory=/path/to/WebToApp
-EnvironmentFile=/path/to/WebToApp/webtoapp.env
-ExecStart=/path/to/WebToApp/venv/bin/uvicorn server.main:app --host 127.0.0.1 --port 8000 --workers 1
+WorkingDirectory=/path/to/All2App
+EnvironmentFile=/path/to/All2App/all2app.env
+ExecStart=/path/to/All2App/venv/bin/uvicorn server.main:app --host 127.0.0.1 --port 8000 --workers 1
 Restart=always
 RestartSec=5
 
@@ -146,10 +146,10 @@ WantedBy=multi-user.target
 ```
 
 ```bash
-sudo chmod 600 /path/to/WebToApp/webtoapp.env
+sudo chmod 600 /path/to/All2App/all2app.env
 sudo systemctl daemon-reload
-sudo systemctl enable --now webtoapp
-sudo systemctl status webtoapp
+sudo systemctl enable --now all2app
+sudo systemctl status all2app
 ```
 
 > Mantén `--workers 1`. La cola de compilación y el limitador de tasa en memoria asumen un solo proceso.
@@ -188,9 +188,9 @@ Los Web Clips de iOS y los perfiles `.mobileconfig` requieren HTTPS. Dos opcione
 
 ```bash
 cloudflared tunnel login
-cloudflared tunnel create webtoapp
-cloudflared tunnel route dns webtoapp your-domain.com
-cloudflared tunnel run webtoapp
+cloudflared tunnel create all2app
+cloudflared tunnel route dns all2app your-domain.com
+cloudflared tunnel run all2app
 ```
 
 **Opción B — Let's Encrypt en Nginx:**
@@ -233,15 +233,15 @@ Si falta cualquier variable `R2_*`, la función queda inactiva y las descargas s
 
 ### Configuración
 
-1. En el panel de Cloudflare, abre **R2** y crea un bucket, p. ej. `webtoapp-downloads`.
+1. En el panel de Cloudflare, abre **R2** y crea un bucket, p. ej. `all2app-downloads`.
 2. **Manage R2 API Tokens → Create API Token** con permiso **Object Read & Write**. Copia el **Access Key ID** y el **Secret Access Key** (el secreto se muestra una sola vez).
 3. Haz público el bucket: **Settings → Public access**. Activa la URL de desarrollo **r2.dev** (`https://pub-xxxx.r2.dev`) para empezar rápido, o añade un **dominio personalizado** (p. ej. `files.example.com`) para tener además caché en el borde.
    > Un dominio personalizado debe estar en un dominio gestionado por **la misma cuenta de Cloudflare** que el bucket.
-4. Define las cinco variables en `webtoapp.env`:
+4. Define las cinco variables en `all2app.env`:
 
    ```bash
    R2_ACCOUNT_ID=...            # tu ID de cuenta (hex)
-   R2_BUCKET=webtoapp-downloads
+   R2_BUCKET=all2app-downloads
    R2_ACCESS_KEY_ID=...
    R2_SECRET_ACCESS_KEY=...
    R2_PUBLIC_BASE_URL=https://pub-xxxx.r2.dev   # o https://files.example.com
@@ -255,7 +255,7 @@ Si falta cualquier variable `R2_*`, la función queda inactiva y las descargas s
 Las apps compiladas antes de activar R2 aún apuntan a archivos locales. Sube sus artefactos a R2 y actualiza su `downloads_cdn` de una pasada:
 
 ```bash
-set -a; . ./webtoapp.env; set +a
+set -a; . ./all2app.env; set +a
 venv/bin/python -m server.scripts.backfill_r2 --dry-run   # vista previa
 venv/bin/python -m server.scripts.backfill_r2             # ejecutar
 ```
@@ -268,7 +268,7 @@ El script es idempotente: es seguro reejecutarlo.
 git pull
 source venv/bin/activate
 pip install -r server/requirements.txt   # si cambiaron las dependencias
-sudo systemctl restart webtoapp
+sudo systemctl restart all2app
 ```
 
 Si cambiaste recursos del frontend (`css/`, `js/`), incrementa la cadena `?v=` en `index.html` para que los navegadores tomen los archivos nuevos en vez de los cacheados.
@@ -281,7 +281,7 @@ Si cambiaste recursos del frontend (`css/`, `js/`), incrementa la cadena `?v=` e
 | La descarga de Android es un zip de PWA, no un APK | Android SDK / apktool no instalados en el servidor (§9). |
 | Las descargas siguen sirviéndose desde el origen | Falta una variable `R2_*`, o no reiniciaste tras definirlas. Ejecuta el backfill para apps antiguas (§11). |
 | El perfil iOS muestra "Sin verificar" | El perfil no está firmado. Provee un certificado de CA pública (§10). |
-| `502 Bad Gateway` | El servicio no está corriendo o el puerto es incorrecto — `systemctl status webtoapp`. |
+| `502 Bad Gateway` | El servicio no está corriendo o el puerto es incorrecto — `systemctl status all2app`. |
 | El endpoint de compilación devuelve `429` | Se alcanzó la cuota diaria por dispositivo o el límite por IP. Ajusta `DAILY_BUILD_QUOTA`. |
 
 ---

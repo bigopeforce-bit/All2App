@@ -57,7 +57,7 @@ def test_config_android_strings(monkeypatch):
     monkeypatch.delenv("ANDROID_PACKAGE_PREFIX", raising=False)
     monkeypatch.delenv("ANDROID_KEYSTORE_DIR", raising=False)
     monkeypatch.delenv("ANDROID_TEMPLATE_KEYSTORE_PASSWORD", raising=False)
-    assert config.android_package_prefix() == "com.webtoapp"
+    assert config.android_package_prefix() == "com.all2app"
     assert config.android_keystore_dir().endswith("certs/app-keys")
     assert config.android_template_keystore_password() == "android"
 

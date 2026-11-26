@@ -1,21 +1,18 @@
 <div align="center">
 
-<img src="../assets/site-logo.jpg" alt="WebToApp" width="120" height="120" style="border-radius: 24px;">
+<img src="../assets/site-logo.jpg" alt="All2App" width="120" height="120" style="border-radius: 24px;">
 
-# WebToApp
+# All2App
 
 **حوّل أي موقع ويب إلى تطبيق قابل للتثبيت — في ثوانٍ.**
 
 رابط واحد يدخل، وتخرج منتجات جاهزة لـ **iPhone / iPad · Android · Windows · macOS · Linux** — بالإضافة إلى سوق تطبيقات عام وملفات شخصية للمنشئين وتعليقات وتقييمات، وكل ذلك دون تسجيل.
 
-[![عرض مباشر](https://img.shields.io/badge/عرض_مباشر-shiaho.sbs-c97953?style=for-the-badge)](https://shiaho.sbs)
-[![CI](https://img.shields.io/badge/CI-pytest%20336-059669?style=for-the-badge)](https://github.com/shiaho777/WebToApp/actions)
+[![CI](https://img.shields.io/badge/CI-pytest%20336-059669?style=for-the-badge)](https://github.com/bigopeforce-bit/All2App/actions)
 [![الرخصة: MIT](https://img.shields.io/badge/License-MIT-1e1914?style=for-the-badge)](../LICENSE)
 [![المنصات](https://img.shields.io/badge/المنصات-5-736357?style=for-the-badge)](#ما-الذي-تحصل-عليه)
 
 [English](../README.md) · [简体中文](README.zh.md) · [日本語](README.ja.md) · **العربية** · [Русский](README.ru.md) · [Español](README.es.md) · [Português](README.pt.md) · [Français](README.fr.md) · [Deutsch](README.de.md)
-
-مجموعة QQ **947508787**
 
 </div>
 
@@ -26,8 +23,6 @@
 أدخل رابطاً — أو ارفع ملف `.html` / `.zip` الخاص بك — وبعد ثوانٍ تحصل على نتيجة قابلة للتثبيت تغطي كل المنصات. كل حزمة هي غلاف أصلي رقيق يشير إلى موقعك، لذا تُقاس أحجامها **بالكيلوبايت لا بالميجابايت** وتُحمَّل شبه فورياً.
 
 كل تطبيق مُنشأ يعيش في صفحة تحميل خاصة به `/a/<id>`: خيارات تثبيت لكل منصة، وقسم قابل للطي بعنوان «عن هذه الصفحة» يمكن للمنشئ ملؤه بمحتوى حقيقي، وطبقة مجتمعية فيها تعليقات وتقييمات بالنجوم. انشره كرابط عام فيظهر أيضاً في **سوق التطبيقات** ليكتشفه الجميع.
-
-مفتوح المصدر · مجاني · بلا تسجيل. جرّبه مباشرة على **[shiaho.sbs](https://shiaho.sbs)**.
 
 ---
 
@@ -172,9 +167,9 @@ uvicorn server.main:app --host 127.0.0.1 --port 8000
 في الإنتاج يُشغَّل عادةً تحت systemd خلف بروكسي عكسي Nginx:
 
 ```ini
-# /etc/systemd/system/webtoapp.service
+# /etc/systemd/system/all2app.service
 [Unit]
-Description=WebToApp
+Description=All2App
 After=network.target
 
 [Service]

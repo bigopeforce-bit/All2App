@@ -1,4 +1,4 @@
-/* WebToApp — pt translations (split from i18n.strings.js, issue #228).
+/* All2App — pt translations (split from i18n.strings.js, issue #228).
    Loaded on demand by js/i18n.js; en ships as the built-in fallback. */
 (function () {
   'use strict';
@@ -16,29 +16,15 @@ R('pt', {
     'analysis.htmlSource': 'Tipo de origem',
     'analysis.htmlSourceValue': 'HTML enviado',
     'history.badgeHtml': 'HTML',
-    'meta.title': 'WebToApp — Transforme sites em aplicativos | Grátis e código aberto',
+    'meta.title': 'All2App — Transforme sites em aplicativos | Grátis e código aberto',
     'meta.description': 'Insira uma URL e obtenha um app que você pode instalar, compartilhar e usar na hora. Funciona em iPhone, Android, Windows, macOS e Linux.',
-    'meta.ogTitle': 'WebToApp — Transforme sites em aplicativos',
+    'meta.ogTitle': 'All2App — Transforme sites em aplicativos',
     'meta.ogDescription': 'Insira um link. Em segundos ele pode ser instalado, compartilhado e usado como um app.',
 
     'nav.langLabel': 'Idioma',
     'nav.github': 'Ver o código no GitHub',
-    'nav.qq': 'Comunidade',
-    'nav.qqShort': 'Comunidade',
-    'nav.qqLead': 'Entre no chat do grupo «WebToApp 网页版»',
-    'nav.qqNumber': 'Número do grupo',
-    'nav.qqJoin': 'Entrar no grupo',
-    'nav.qqCopy': 'Copiar o número',
-    'nav.qqCopied': 'Copiado',
-    'nav.qqCopyFailed': 'Não foi possível copiar. Selecione o número acima.',
-    'nav.qqClose': 'Fechar',
-    'nav.communityTitle': 'Comunidade',
-    'nav.tgTitle': 'Telegram',
-    'nav.tgNote': 'É o grupo de outro projeto com o mesmo nome. Dá para conversar sobre este site lá também.',
-    'nav.tgJoin': 'Abrir o Telegram',
-    'nav.qqSection': 'Grupo QQ',
 
-    'hero.kicker': 'WEBTOAPP / DO SITE AO APP',
+    'hero.kicker': 'ALL2APP / DO SITE AO APP',
     'hero.titleLine1': 'Transforme sites',
     'hero.titleLine2': 'em aplicativos.',
     'hero.badge': 'Código aberto · Grátis · Sem cadastro',

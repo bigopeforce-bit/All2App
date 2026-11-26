@@ -1,6 +1,6 @@
 {
-  "name": "WebToApp",
-  "short_name": "WebToApp",
+  "name": "All2App",
+  "short_name": "All2App",
   "description": "Turn any website into an installable app for iPhone, Android, Windows, macOS and Linux.",
   "start_url": "/",
   "scope": "/",
@@ -8,7 +8,7 @@
   "background_color": "#f7f3ec",
   "theme_color": "#f7f3ec",
   "icons": [
-    { "src": "/assets/icon-192.png?v=20261104-brand2", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "/assets/icon-512.png?v=20261104-brand2", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+    { "src": "/assets/icon-192.png?v=20261126-all2app1", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/assets/icon-512.png?v=20261126-all2app1", "sizes": "512x512", "type": "image/png", "purpose": "any" }
   ]
 }

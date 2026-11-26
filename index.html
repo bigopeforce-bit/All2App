@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WebToApp — Turn websites into apps | Free & Open Source</title>
+  <title>All2App — Turn websites into apps | Free & Open Source</title>
   <meta name="description" content="Enter a URL and get an app you can install, share and use right away. Works on iPhone, Android, Windows, macOS and Linux.">
-  <meta name="keywords" content="web to app,URL to app,PWA generator,website to client,WebToApp,free,open source">
-  <meta property="og:title" content="WebToApp — Turn websites into apps">
+  <meta name="keywords" content="web to app,URL to app,PWA generator,website to client,All2App,free,open source">
+  <meta property="og:title" content="All2App — Turn websites into apps">
   <meta property="og:description" content="Enter a link. Seconds later it can be installed, shared and used like an app.">
   <meta property="og:type" content="website">
   <meta name="theme-color" content="#efe4d4" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#17130f" media="(prefers-color-scheme: dark)">
-  <link rel="icon" href="assets/site-logo-96.jpg?v=20261104-brand2">
-  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=20261104-brand2">
+  <link rel="icon" href="assets/site-logo-96.jpg?v=20261126-all2app1">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=20261126-all2app1">
   <link rel="manifest" href="manifest.webmanifest">
   <script>
   // Start the dynamic API calls while the page/CSS/JS are still downloading.
   // app.v5.js consumes these promises instead of issuing a second round-trip.
   (function () {
     try {
-      var key = 'webtoapp-device-fingerprint-v1';
+      var key = 'all2app-device-fingerprint-v1';
       var fp = localStorage.getItem(key);
       if (!fp) {
         var bytes = new Uint8Array(16);
@@ -27,14 +27,14 @@
         fp = Array.from(bytes, function (b) { return b.toString(16).padStart(2, '0'); }).join('');
         localStorage.setItem(key, fp);
       }
-      document.cookie = 'webtoapp_device_fingerprint=' + encodeURIComponent(fp) + '; Max-Age=31536000; Path=/; SameSite=Lax' + (location.protocol === 'https:' ? '; Secure' : '');
+      document.cookie = 'all2app_device_fingerprint=' + encodeURIComponent(fp) + '; Max-Age=31536000; Path=/; SameSite=Lax' + (location.protocol === 'https:' ? '; Secure' : '');
       function optional(promise) {
         // Keep the original promise (consumers fall back on rejection) but
         // mark it handled in case the app script never gets to consume it.
         promise.catch(function () {});
         return promise;
       }
-      window.__wtaPrefetch = {
+      window.__a2aPrefetch = {
         stats: optional(fetch('/api/stats')),
         history: optional(fetch('/api/history', { headers: { 'X-Device-Fingerprint': fp } })),
         me: optional(fetch('/api/me')),
@@ -48,15 +48,15 @@
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=Noto+Serif+SC:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500&display=swap">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=Noto+Serif+SC:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&family=Noto+Serif+SC:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500&display=swap" rel="stylesheet"></noscript>
-  <link rel="stylesheet" href="css/style.css?v=20261118-board1">
-  <script src="js/i18n.js?v=20261118-board1"></script>
-  <script src="js/i18n.en.js?v=20261118-board1"></script>
+  <link rel="stylesheet" href="css/style.css?v=20261126-all2app1">
+  <script src="js/i18n.js?v=20261126-all2app1"></script>
+  <script src="js/i18n.en.js?v=20261126-all2app1"></script>
 </head>
 <body>
   <header id="nav">
     <a class="logo" href="/">
-      <img src="assets/site-logo-96.jpg?v=20261104-brand2" alt="WebToApp" width="28" height="28">
-      <span>WebToApp</span>
+      <img src="assets/site-logo-96.jpg?v=20261126-all2app1" alt="All2App" width="28" height="28">
+      <span>All2App</span>
     </a>
     <div class="nav-actions">
       <button id="profile-btn" class="profile-btn" type="button" data-i18n-aria-label="profile.open" data-i18n-title="profile.open" aria-label="My page" title="My page">
@@ -86,42 +86,12 @@
           <div id="notices-scroll" class="nav-notices-scroll"></div>
         </div>
       </div>
-      <a class="gh-link" href="https://github.com/shiaho777/WebToApp" target="_blank" rel="noopener noreferrer"
+      <a class="gh-link" href="https://github.com/bigopeforce-bit/All2App" target="_blank" rel="noopener noreferrer"
          data-i18n-aria-label="nav.github" aria-label="View source on GitHub" title="GitHub">
         <svg viewBox="0 0 16 16" width="20" height="20" aria-hidden="true" fill="currentColor">
           <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
         </svg>
       </a>
-      <div class="qq-group">
-        <button id="qq-group-btn" class="qq-group-btn" type="button"
-          aria-haspopup="dialog" aria-expanded="false" aria-controls="qq-group-panel"
-          data-i18n-aria-label="nav.qq" data-i18n-title="nav.qq" aria-label="Community" title="Community">
-          <span data-i18n="nav.qqShort">Community</span>
-        </button>
-        <div id="qq-group-panel" class="qq-group-panel hidden" role="dialog" aria-labelledby="community-title">
-          <button id="qq-group-close" class="qq-group-close" type="button" data-i18n-aria-label="nav.qqClose" aria-label="Close">×</button>
-          <p id="community-title" class="qq-group-title" data-i18n="nav.communityTitle">社区</p>
-          <section class="community-block">
-            <h2 class="community-kicker" data-i18n="nav.tgTitle">Telegram</h2>
-            <p class="qq-group-lead" data-i18n="nav.tgNote">这是另一个同名项目的群，这边的事也可以在那里一起聊。</p>
-            <a class="qq-group-join community-link" href="https://t.me/webtoapp777" target="_blank" rel="noopener noreferrer" data-i18n="nav.tgJoin">打开 Telegram</a>
-          </section>
-          <section class="community-block">
-            <h2 class="community-kicker" data-i18n="nav.qqSection">QQ 群</h2>
-            <p class="community-name">WebToApp 网页版</p>
-            <p class="qq-group-lead" data-i18n="nav.qqLead">点击链接加入群聊【WebToApp 网页版】</p>
-            <p class="qq-group-number-row">
-              <span data-i18n="nav.qqNumber">群号</span>
-              <strong id="qq-group-number">947508787</strong>
-            </p>
-            <div class="qq-group-actions">
-              <a class="qq-group-join" href="https://qm.qq.com/q/F9BHHJNvtm" target="_blank" rel="noopener noreferrer" data-i18n="nav.qqJoin">加入群聊</a>
-              <button id="qq-group-copy" class="qq-group-copy" type="button" data-i18n="nav.qqCopy">复制群号</button>
-            </div>
-            <p id="qq-group-status" class="qq-group-status" role="status"></p>
-          </section>
-        </div>
-      </div>
     </div>
   </header>
 
@@ -129,7 +99,7 @@
     <!-- ===== HERO ===== -->
     <section id="hero">
       <div class="hero-center">
-          <p class="hero-kicker" data-i18n="hero.kicker">WEBTOAPP / WEBSITE TO APP</p>
+          <p class="hero-kicker" data-i18n="hero.kicker">ALL2APP / WEBSITE TO APP</p>
           <h1><span data-i18n="hero.titleLine1">Turn websites</span><br><span data-i18n="hero.titleLine2">into apps.</span></h1>
           <p class="subtitle" data-i18n="hero.subtitle">Paste a link. Get an installable app for iPhone, Android, Windows, macOS and Linux.</p>
 
@@ -363,7 +333,7 @@
                       </label>
                       <label class="field field-full">
                         <span data-i18n="config.packagePrefix">Android package prefix</span>
-                        <input id="android-package-prefix" type="text" placeholder="com.webtoapp" value="com.webtoapp">
+                        <input id="android-package-prefix" type="text" placeholder="com.all2app" value="com.all2app">
                         <small class="field-note" data-i18n="config.packagePrefixNote">e.g. com.company.product; the app ID is appended automatically</small>
                       </label>
                     </div>
@@ -806,7 +776,7 @@
   <script src="js/announcements.js?v=20261120-reten2"></script>
   <script src="js/mdmini.js?v=20261013-ads1"></script>
   <script src="js/pow.js?v=20261118-pow1"></script>
-  <script src="js/app.v5.js?v=20261118-board1"></script>
+  <script src="js/app.v5.js?v=20261126-all2app1"></script>
   <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () {

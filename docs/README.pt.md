@@ -1,21 +1,18 @@
 <div align="center">
 
-<img src="../assets/site-logo.jpg" alt="WebToApp" width="120" height="120" style="border-radius: 24px;">
+<img src="../assets/site-logo.jpg" alt="All2App" width="120" height="120" style="border-radius: 24px;">
 
-# WebToApp
+# All2App
 
 **Transforme qualquer site num app instalável — em segundos.**
 
 Um link entra, saem produtos prontos para **iPhone / iPad · Android · Windows · macOS · Linux** — além de um mercado público de apps, perfis de criador, comentários e avaliações, tudo sem cadastro.
 
-[![Demo ao vivo](https://img.shields.io/badge/Demo_ao_vivo-shiaho.sbs-c97953?style=for-the-badge)](https://shiaho.sbs)
-[![CI](https://img.shields.io/badge/CI-pytest%20336-059669?style=for-the-badge)](https://github.com/shiaho777/WebToApp/actions)
+[![CI](https://img.shields.io/badge/CI-pytest%20336-059669?style=for-the-badge)](https://github.com/bigopeforce-bit/All2App/actions)
 [![Licença: MIT](https://img.shields.io/badge/License-MIT-1e1914?style=for-the-badge)](../LICENSE)
 [![Plataformas](https://img.shields.io/badge/Plataformas-5-736357?style=for-the-badge)](#o-que-você-recebe)
 
 [English](../README.md) · [简体中文](README.zh.md) · [日本語](README.ja.md) · [العربية](README.ar.md) · [Русский](README.ru.md) · [Español](README.es.md) · **Português** · [Français](README.fr.md) · [Deutsch](README.de.md)
-
-Grupo QQ **947508787**
 
 </div>
 
@@ -26,8 +23,6 @@ Grupo QQ **947508787**
 Cole uma URL — ou envie o seu próprio `.html` / `.zip` — e segundos depois recebe um resultado instalável para todas as plataformas. Cada artefato é uma fina camada nativa apontando para o seu site, por isso os pacotes são medidos em **kilobytes, não megabytes**, e baixam quase instantaneamente.
 
 Cada app gerada vive na sua própria página de download `/a/<id>`: opções por plataforma, uma seção dobrável «Sobre esta página» que o criador pode preencher com conteúdo real, e uma camada comunitária com comentários e avaliações por estrelas. Publique como link público e ela também aparece no **mercado de apps** para todos descobrirem.
-
-Open source · Grátis · Sem cadastro. Experimente ao vivo em **[shiaho.sbs](https://shiaho.sbs)**.
 
 ---
 
@@ -172,9 +167,9 @@ Abra http://127.0.0.1:8000.
 Em produção é comum correr sob systemd, atrás de um reverse proxy Nginx:
 
 ```ini
-# /etc/systemd/system/webtoapp.service
+# /etc/systemd/system/all2app.service
 [Unit]
-Description=WebToApp
+Description=All2App
 After=network.target
 
 [Service]

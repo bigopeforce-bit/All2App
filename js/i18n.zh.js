@@ -1,4 +1,4 @@
-/* WebToApp — zh translations (split from i18n.strings.js, issue #228).
+/* All2App — zh translations (split from i18n.strings.js, issue #228).
    Loaded on demand by js/i18n.js; en ships as the built-in fallback. */
 (function () {
   'use strict';
@@ -16,29 +16,15 @@ R('zh', {
     'analysis.htmlSource': '来源类型',
     'analysis.htmlSourceValue': '上传的 HTML',
     'history.badgeHtml': 'HTML',
-    'meta.title': 'WebToApp — 把网站做成应用 | 免费开源',
+    'meta.title': 'All2App — 把网站做成应用 | 免费开源',
     'meta.description': '输入一个网址，得到一个可以安装、可以分享、可以直接使用的应用。支持 iPhone、Android、Windows、macOS 和 Linux。',
-    'meta.ogTitle': 'WebToApp — 把网站做成应用',
+    'meta.ogTitle': 'All2App — 把网站做成应用',
     'meta.ogDescription': '输入一个网址，几秒钟后，它就能被安装、被分享，也能像应用一样被使用。',
 
     'nav.langLabel': '语言',
     'nav.github': '在 GitHub 上查看源码',
-    'nav.qq': '社区',
-    'nav.qqShort': '社区',
-    'nav.qqLead': '点击链接加入群聊【WebToApp 网页版】',
-    'nav.qqNumber': '群号',
-    'nav.qqJoin': '加入群聊',
-    'nav.qqCopy': '复制群号',
-    'nav.qqCopied': '已复制',
-    'nav.qqCopyFailed': '没复制上，请选中上面的群号',
-    'nav.qqClose': '关闭',
-    'nav.communityTitle': '社区',
-    'nav.tgTitle': 'Telegram 社区',
-    'nav.tgNote': '这是另一个同名项目的群，这边的事也可以在那里一起聊。',
-    'nav.tgJoin': '打开 Telegram',
-    'nav.qqSection': 'QQ 群',
 
-    'hero.kicker': 'WEBTOAPP / 网站到应用',
+    'hero.kicker': 'ALL2APP / 网站到应用',
     'hero.titleLine1': '把网站',
     'hero.titleLine2': '做成应用。',
     'hero.badge': '开源 · 免费 · 无需登录',

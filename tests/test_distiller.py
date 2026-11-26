@@ -104,18 +104,18 @@ class DistillerMacosLauncherTests(unittest.TestCase):
         self.assertTrue(launcher.startswith("#!/bin/bash"))
         # Preferred path: native WKWebView helper inside our bundle identity,
         # then the JXA/osascript window, then Chromium app mode, then browser.
-        self.assertIn("wta_webview", launcher)
+        self.assertIn("a2a_webview", launcher)
         self.assertIn("/usr/bin/osascript -l JavaScript", launcher)
-        self.assertIn(f"export WTA_URL={shlex.quote('https://example.com/x')}", launcher)
-        self.assertLess(launcher.index("wta_webview"), launcher.index("osascript"))
+        self.assertIn(f"export A2A_URL={shlex.quote('https://example.com/x')}", launcher)
+        self.assertLess(launcher.index("a2a_webview"), launcher.index("osascript"))
         self.assertLess(launcher.index("osascript"), launcher.index("open -na"))
-        self.assertIn('open "$WTA_URL"', launcher)
-        self.assertGreater(launcher.index('open "$WTA_URL"'), launcher.index("open -na"))
+        self.assertIn('open "$A2A_URL"', launcher)
+        self.assertGreater(launcher.index('open "$A2A_URL"'), launcher.index("open -na"))
         # The JXA fallback runtime ships inside the bundle and drives a real window.
         app_js = entries["My App.app/Contents/Resources/app.js"].decode()
         self.assertIn("WKWebView", app_js)
         self.assertIn("windowWillClose:", app_js)
-        self.assertIn("WTA_URL", app_js)
+        self.assertIn("A2A_URL", app_js)
         # Launcher stays executable through the zip round-trip.
         self.assertEqual(modes["My App.app/Contents/MacOS/launcher"], 0o755)
 
@@ -128,8 +128,8 @@ class DistillerMacosLauncherTests(unittest.TestCase):
         launcher = self._launcher(entries, name=tricky_name)
         # Entry dir is sanitized; env values keep the raw name via shlex.
         self.assertTrue(all(k.startswith(f"{_safe_fs_name(tricky_name)}.app/") for k in entries))
-        self.assertIn(f"export WTA_URL={shlex.quote(tricky_url)}", launcher)
-        self.assertIn(f"export WTA_NAME={shlex.quote(tricky_name)}", launcher)
+        self.assertIn(f"export A2A_URL={shlex.quote(tricky_url)}", launcher)
+        self.assertIn(f"export A2A_NAME={shlex.quote(tricky_name)}", launcher)
 
     def test_webview_runtime_rejects_http_targets(self):
         entries, _ = self._build(url="http://example.com")
@@ -371,7 +371,7 @@ class DownloadPageHardeningTests(unittest.TestCase):
         self.assertEqual(recipe["languages"], ["zh", "en"])
 
     def test_download_page_marker_invalidates_old_ads_cache(self):
-        self.assertEqual(Distiller.DOWNLOAD_PAGE_MARKER, "<!-- WebToAppDownloadPage:v10-report -->")
+        self.assertEqual(Distiller.DOWNLOAD_PAGE_MARKER, "<!-- All2AppDownloadPage:v10-report -->")
 
     def test_download_page_supports_dark_mode(self):
         page = self._page()
@@ -388,21 +388,21 @@ class DownloadPageHardeningTests(unittest.TestCase):
 
     def test_page_mounts_community_scripts(self):
         # Download pages load the shared community component: mount point,
-        # WTA_APP_ID bootstrap before the script, and 'self' in the CSP so
+        # A2A_APP_ID bootstrap before the script, and 'self' in the CSP so
         # the external scripts run under the hash-pinned policy (issue #81).
         page = self._page()
         self.assertIn('id="community-sec"', page)
         self.assertIn('id="creator-card"', page)
         self.assertIn('id="comment-form"', page)
-        self.assertIn("window.WTA_APP_ID", page)
+        self.assertIn("window.A2A_APP_ID", page)
         self.assertIn('/js/community.js', page)
         self.assertIn('/js/mdmini.js', page)
         import re as _re
         script_src = _re.search(r"script-src ([^;]+)", page).group(1)
         self.assertIn("'self'", script_src)
         self.assertIn("sha256-", script_src)
-        # WTA_APP_ID must be assigned before community.js executes.
-        self.assertLess(page.index("window.WTA_APP_ID"), page.index("/js/community.js"))
+        # A2A_APP_ID must be assigned before community.js executes.
+        self.assertLess(page.index("window.A2A_APP_ID"), page.index("/js/community.js"))
         # community.js uses the shared toast/confirm helpers (issue #157).
         self.assertIn('/js/ui.js', page)
         self.assertLess(page.index("/js/ui.js"), page.index("/js/community.js"))
@@ -489,7 +489,7 @@ class ArtifactSanitizationTests(unittest.TestCase):
             cfg = (Path(tmp) / "ios.mobileconfig").read_bytes()
         self.assertNotIn(b"</dict><key>Injected</key>", cfg)
         self.assertIn(b"&lt;/dict&gt;", cfg)
-        self.assertIn(b"com.webtoapp.abcd.clip", cfg)
+        self.assertIn(b"com.all2app.abcd.clip", cfg)
 
     def test_mobileconfig_points_clip_directly_at_target(self):
         """A FullScreen clip that 302s cross-origin (via /launch) gets pushed

@@ -1,4 +1,4 @@
-/* WebToApp — ru translations (split from i18n.strings.js, issue #228).
+/* All2App — ru translations (split from i18n.strings.js, issue #228).
    Loaded on demand by js/i18n.js; en ships as the built-in fallback. */
 (function () {
   'use strict';
@@ -16,29 +16,15 @@ R('ru', {
     'analysis.htmlSource': 'Тип источника',
     'analysis.htmlSourceValue': 'Загруженный HTML',
     'history.badgeHtml': 'HTML',
-    'meta.title': 'WebToApp — Превратите сайты в приложения | Бесплатно и с открытым кодом',
+    'meta.title': 'All2App — Превратите сайты в приложения | Бесплатно и с открытым кодом',
     'meta.description': 'Введите URL и получите приложение, которое можно установить, поделиться им и сразу использовать. Работает на iPhone, Android, Windows, macOS и Linux.',
-    'meta.ogTitle': 'WebToApp — Превратите сайты в приложения',
+    'meta.ogTitle': 'All2App — Превратите сайты в приложения',
     'meta.ogDescription': 'Введите ссылку. Через несколько секунд её можно установить, отправить и использовать как приложение.',
 
     'nav.langLabel': 'Язык',
     'nav.github': 'Открыть исходный код на GitHub',
-    'nav.qq': 'Сообщество',
-    'nav.qqShort': 'Сообщество',
-    'nav.qqLead': 'Вступить в групповой чат «WebToApp 网页版»',
-    'nav.qqNumber': 'Номер группы',
-    'nav.qqJoin': 'Вступить в группу',
-    'nav.qqCopy': 'Копировать номер',
-    'nav.qqCopied': 'Скопировано',
-    'nav.qqCopyFailed': 'Не удалось скопировать. Выделите номер выше.',
-    'nav.qqClose': 'Закрыть',
-    'nav.communityTitle': 'Сообщество',
-    'nav.tgTitle': 'Telegram',
-    'nav.tgNote': 'Это группа другого проекта с тем же названием. Про этот сайт тоже можно поговорить там.',
-    'nav.tgJoin': 'Открыть Telegram',
-    'nav.qqSection': 'Группа QQ',
 
-    'hero.kicker': 'WEBTOAPP / САЙТ В ПРИЛОЖЕНИЕ',
+    'hero.kicker': 'ALL2APP / САЙТ В ПРИЛОЖЕНИЕ',
     'hero.titleLine1': 'Превратите сайты',
     'hero.titleLine2': 'в приложения.',
     'hero.badge': 'Открытый код · Бесплатно · Без регистрации',

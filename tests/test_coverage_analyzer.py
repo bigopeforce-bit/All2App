@@ -337,7 +337,7 @@ def test_suggest_app_name_all_strategies():
     assert analyzer._suggest_app_name("Title", "example.com", " Site Name ", "custom") == ("Site Name", "custom")
     assert analyzer._suggest_app_name("Title", "example.com", " Site Name ", "") == ("Site Name", "site_name")
     assert analyzer._suggest_app_name("", "www.example.com") == ("example", "host_fallback")
-    assert analyzer._suggest_app_name("", "") == ("WebToApp", "host_fallback")
+    assert analyzer._suggest_app_name("", "") == ("All2App", "host_fallback")
     assert analyzer._suggest_app_name("News | Example | Other", "example.com") == ("Example", "title_host_match")
     assert analyzer._suggest_app_name("First | Second", "unrelated.com") == ("First", "title_first_part")
     assert analyzer._suggest_app_name("Single", "unrelated.com") == ("Single", "title_full")

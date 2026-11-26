@@ -1,4 +1,4 @@
-/* WebToApp — ja translations (split from i18n.strings.js, issue #228).
+/* All2App — ja translations (split from i18n.strings.js, issue #228).
    Loaded on demand by js/i18n.js; en ships as the built-in fallback. */
 (function () {
   'use strict';
@@ -16,29 +16,15 @@ R('ja', {
     'analysis.htmlSource': 'ソース種別',
     'analysis.htmlSourceValue': 'アップロードされた HTML',
     'history.badgeHtml': 'HTML',
-    'meta.title': 'WebToApp — ウェブサイトをアプリに | 無料・オープンソース',
+    'meta.title': 'All2App — ウェブサイトをアプリに | 無料・オープンソース',
     'meta.description': 'URL を入力するだけで、インストール・共有・すぐに使えるアプリが手に入ります。iPhone、Android、Windows、macOS、Linux に対応。',
-    'meta.ogTitle': 'WebToApp — ウェブサイトをアプリに',
+    'meta.ogTitle': 'All2App — ウェブサイトをアプリに',
     'meta.ogDescription': 'リンクを入力。数秒後にはインストール・共有でき、アプリのように使えます。',
 
     'nav.langLabel': '言語',
     'nav.github': 'GitHub でソースを見る',
-    'nav.qq': 'コミュニティ',
-    'nav.qqShort': 'コミュニティ',
-    'nav.qqLead': 'グループチャット「WebToApp 网页版」に参加',
-    'nav.qqNumber': 'グループ番号',
-    'nav.qqJoin': 'グループに参加',
-    'nav.qqCopy': '番号をコピー',
-    'nav.qqCopied': 'コピーしました',
-    'nav.qqCopyFailed': 'コピーできませんでした。上の番号を選択してください。',
-    'nav.qqClose': '閉じる',
-    'nav.communityTitle': 'コミュニティ',
-    'nav.tgTitle': 'Telegram',
-    'nav.tgNote': '同名の別プロジェクトのグループです。こちらの話もそこで一緒に話せます。',
-    'nav.tgJoin': 'Telegram を開く',
-    'nav.qqSection': 'QQグループ',
 
-    'hero.kicker': 'WEBTOAPP / ウェブからアプリへ',
+    'hero.kicker': 'ALL2APP / ウェブからアプリへ',
     'hero.titleLine1': 'ウェブサイトを',
     'hero.titleLine2': 'アプリに。',
     'hero.badge': 'オープンソース · 無料 · 登録不要',

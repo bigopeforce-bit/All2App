@@ -1,21 +1,18 @@
 <div align="center">
 
-<img src="../assets/site-logo.jpg" alt="WebToApp" width="120" height="120" style="border-radius: 24px;">
+<img src="../assets/site-logo.jpg" alt="All2App" width="120" height="120" style="border-radius: 24px;">
 
-# WebToApp
+# All2App
 
 **Verwandle jede Website in eine installierbare App — in Sekunden.**
 
 Ein Link geht rein, fertige Produkte für **iPhone / iPad · Android · Windows · macOS · Linux** kommen raus — dazu ein öffentlicher App-Markt, Creator-Profile, Kommentare und Bewertungen, alles ohne Registrierung.
 
-[![Live-Demo](https://img.shields.io/badge/Live--Demo-shiaho.sbs-c97953?style=for-the-badge)](https://shiaho.sbs)
-[![CI](https://img.shields.io/badge/CI-pytest%20336-059669?style=for-the-badge)](https://github.com/shiaho777/WebToApp/actions)
+[![CI](https://img.shields.io/badge/CI-pytest%20336-059669?style=for-the-badge)](https://github.com/bigopeforce-bit/All2App/actions)
 [![Lizenz: MIT](https://img.shields.io/badge/License-MIT-1e1914?style=for-the-badge)](../LICENSE)
 [![Plattformen](https://img.shields.io/badge/Plattformen-5-736357?style=for-the-badge)](#was-du-bekommst)
 
 [English](../README.md) · [简体中文](README.zh.md) · [日本語](README.ja.md) · [العربية](README.ar.md) · [Русский](README.ru.md) · [Español](README.es.md) · [Português](README.pt.md) · [Français](README.fr.md) · **Deutsch**
-
-QQ-Gruppe **947508787**
 
 </div>
 
@@ -26,8 +23,6 @@ QQ-Gruppe **947508787**
 URL eingeben — oder eigenes `.html` / `.zip` hochladen — und Sekunden später hast du ein installierbares Ergebnis für alle Plattformen. Jedes Artefakt ist eine dünne native Hülle, die auf deine Seite zeigt: Die Pakete werden in **Kilobyte statt Megabyte** gemessen und laden fast sofort.
 
 Jede generierte App lebt auf ihrer eigenen Download-Seite `/a/<id>`: Installationsoptionen pro Plattform, eine einklappbare Sektion „Über diese Seite", die der Creator mit echtem Inhalt füllen kann, und eine Community-Ebene mit Kommentaren und Sternebewertungen. Als öffentlichen Link veröffentlicht, erscheint sie außerdem im **App-Markt** für alle.
-
-Open Source · Kostenlos · Keine Registrierung. Live ausprobieren: **[shiaho.sbs](https://shiaho.sbs)**.
 
 ---
 
@@ -172,9 +167,9 @@ uvicorn server.main:app --host 127.0.0.1 --port 8000
 In Produktion läuft es üblicherweise unter systemd hinter einem Nginx-Reverse-Proxy:
 
 ```ini
-# /etc/systemd/system/webtoapp.service
+# /etc/systemd/system/all2app.service
 [Unit]
-Description=WebToApp
+Description=All2App
 After=network.target
 
 [Service]

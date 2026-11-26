@@ -1,6 +1,6 @@
-# Contributing to WebToApp
+# Contributing to All2App
 
-Thanks for helping improve WebToApp! This short guide covers how changes land in the project.
+Thanks for helping improve All2App! This short guide covers how changes land in the project.
 
 ## The delivery loop
 
@@ -10,7 +10,7 @@ Every intentional change — feature, fix, or docs — follows the same loop:
 Issue → PR into main → CI green → merge → Issue auto-closes
 ```
 
-1. **Start from an Issue.** If none exists for your change, [open one](https://github.com/shiaho777/WebToApp/issues/new) describing the problem and the intended scope.
+1. **Start from an Issue.** If none exists for your change, [open one](https://github.com/bigopeforce-bit/All2App/issues/new) describing the problem and the intended scope.
 2. **Branch from `main`.** Use a descriptive name (`fix/...`, `feat/...`, `docs/...`).
 3. **Make your changes.** Keep commits focused. Don't commit secrets, `generated/`, `certs/*.keystore` / `*.pem`, or IDE/OS files — they're git-ignored for a reason.
 4. **Run the tests locally:**
@@ -38,7 +38,7 @@ Issue → PR into main → CI green → merge → Issue auto-closes
 
 Open an Issue with:
 - What you expected, and what happened instead.
-- The URL you tried (for WebToApp itself, or the site you wrapped).
+- The URL you tried (for All2App itself, or the site you wrapped).
 - Steps to reproduce, and your platform / browser.
 
 ## Code of conduct

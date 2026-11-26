@@ -1,7 +1,7 @@
 """Community layer: fingerprint-keyed user profiles, per-app creator
 attribution, comments and 1-5 ratings.
 
-There is no signup — the persistent device fingerprint (``webtoapp_device_
+There is no signup — the persistent device fingerprint (``all2app_device_
 fingerprint`` cookie, minted client-side on first visit) is the identity.
 Every fingerprint gets a sequential public ``user_num`` on first sight, in
 first-seen order. Users may then set a unique display name, a Markdown bio

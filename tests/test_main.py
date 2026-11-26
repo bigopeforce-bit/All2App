@@ -152,7 +152,7 @@ class HistoryBulkDeleteTests(unittest.TestCase):
         main.history_store.record_build(self.FP, {"id": app_id, "name": app_id, "url": f"https://{app_id}.test"}, f"/a/{app_id}", None)
 
     def _cookies(self):
-        return {"webtoapp_device_fingerprint": self.FP}
+        return {"all2app_device_fingerprint": self.FP}
 
     def test_bulk_delete_removes_only_requested_ids(self):
         for app_id in ("a1", "b2", "c3"):
@@ -230,7 +230,7 @@ class MarketAndVisibilityTests(unittest.TestCase):
         main.history_store.record_build(self.FP, recipe, f"/a/{app_id}", None)
 
     def _cookies(self):
-        return {"webtoapp_device_fingerprint": self.FP}
+        return {"all2app_device_fingerprint": self.FP}
 
     def test_history_and_market_show_an_open_icon_deadline(self):
         self._build("solid001", "public", ["tools"])
@@ -370,7 +370,7 @@ class MarketAndVisibilityTests(unittest.TestCase):
         resp = self.client.post(
             "/api/history/owned/visibility",
             json={"visibility": "public", "edit_token": "wrong"},
-            cookies={"webtoapp_device_fingerprint": "someone-else"},
+            cookies={"all2app_device_fingerprint": "someone-else"},
         )
         self.assertEqual(resp.status_code, 403)
         # Owning device WITHOUT the token -> 403 too: device attachment is
@@ -394,7 +394,7 @@ class MarketAndVisibilityTests(unittest.TestCase):
         resp = self.client.post(
             "/api/history/owned/visibility",
             json={"visibility": "private", "edit_token": "tok-owned"},
-            cookies={"webtoapp_device_fingerprint": "someone-else"},
+            cookies={"all2app_device_fingerprint": "someone-else"},
         )
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(self.client.get("/api/market").json()["items"], [])
@@ -407,7 +407,7 @@ class MarketAndVisibilityTests(unittest.TestCase):
         resp = self.client.post(
             "/api/history/notag/visibility",
             json={"visibility": "public", "edit_token": "tok-notag"},
-            cookies={"webtoapp_device_fingerprint": "someone-else"},
+            cookies={"all2app_device_fingerprint": "someone-else"},
         )
         self.assertEqual(resp.status_code, 400)
 
@@ -456,7 +456,7 @@ class MarketAndVisibilityTests(unittest.TestCase):
         # into the caller's own history). It must NOT suffice to flip a
         # victim app's public/private state (issue #73).
         self._build("victimapp", "private", ["tools"])
-        attacker = {"webtoapp_device_fingerprint": "attacker-fp"}
+        attacker = {"all2app_device_fingerprint": "attacker-fp"}
         resp = self.client.post("/api/history/attach/victimapp", cookies=attacker)
         self.assertEqual(resp.status_code, 200)
         self.assertTrue(main.history_store.device_owns_app("attacker-fp", "victimapp"))
@@ -497,7 +497,7 @@ class DownloadPageNoAttachTests(unittest.TestCase):
             "id": app_id, "name": "Foreign App", "url": "https://foreign.test",
             "color": "#7c3aed", "visibility": "public", "tags": ["tools"],
         }))
-        cookies = {"webtoapp_device_fingerprint": "visitor-fp"}
+        cookies = {"all2app_device_fingerprint": "visitor-fp"}
         for _ in range(2):
             resp = self.client.get(f"/a/{app_id}", cookies=cookies)
             self.assertEqual(resp.status_code, 200)
@@ -531,7 +531,7 @@ class HistoryImportHardeningTests(unittest.TestCase):
         self._tmp.cleanup()
 
     def _cookies(self):
-        return {"webtoapp_device_fingerprint": self.FP}
+        return {"all2app_device_fingerprint": self.FP}
 
     def test_rejects_traversal_app_id(self):
         resp = self.client.post(
@@ -711,7 +711,7 @@ class CommunityEndpointTests(unittest.TestCase):
         self._tmp.cleanup()
 
     def _cookies(self, fp):
-        return {"webtoapp_device_fingerprint": fp}
+        return {"all2app_device_fingerprint": fp}
 
     def _make_app(self, app_id, fp, visibility="public", name=None, url=None):
         (self.apps_dir / app_id).mkdir(parents=True, exist_ok=True)

@@ -1,18 +1,18 @@
 /* ============================================================
-   WebToApp — community widget for generated download pages.
+   All2App — community widget for generated download pages.
    Renders the creator card, the creator's other public apps,
    comments and ratings into the mount points emitted by
    distiller.render_download_page. Self-contained: bootstraps the
    shared device fingerprint, carries its own 10-language strings,
    and re-renders when the page's <html lang> changes.
-   Requires /js/mdmini.js (window.wtaMd) loaded before this file.
+   Requires /js/mdmini.js (window.a2aMd) loaded before this file.
    ============================================================ */
 (function () {
   'use strict';
 
-  var FP_KEY = 'webtoapp-device-fingerprint-v1';
-  var FP_COOKIE = 'webtoapp_device_fingerprint';
-  var LANG_KEY = 'webtoapp-lang-v1';
+  var FP_KEY = 'all2app-device-fingerprint-v1';
+  var FP_COOKIE = 'all2app_device_fingerprint';
+  var LANG_KEY = 'all2app-lang-v1';
   var SUPPORTED = ['en', 'zh', 'ja', 'ko', 'ar', 'ru', 'es', 'pt', 'fr', 'de'];
 
   var STRINGS = {
@@ -206,7 +206,7 @@
     } catch (_e) { return ''; }
   }
 
-  var appId = window.WTA_APP_ID || (location.pathname.match(/\/a\/([A-Za-z0-9_-]{4,64})/) || [])[1];
+  var appId = window.A2A_APP_ID || (location.pathname.match(/\/a\/([A-Za-z0-9_-]{4,64})/) || [])[1];
   var data = null;
   var pickedRating = 0;
 
@@ -227,7 +227,7 @@
           '<span class="creator-label">' + esc(t('creator')) + '</span>' +
           '<span class="creator-name">' + esc(name) + ' <em class="creator-num">#' + c.user_num + '</em></span>' +
         '</span></a>' +
-      (c.bio_md ? '<div class="creator-bio">' + window.wtaMd(c.bio_md) + '</div>' : '');
+      (c.bio_md ? '<div class="creator-bio">' + window.a2aMd(c.bio_md) + '</div>' : '');
   }
 
   function renderOtherApps(apps) {
@@ -332,11 +332,11 @@
       }).then(function (r) {
         if (!r.ok) throw new Error('report failed');
         form.remove();
-        if (window.WtaUI) window.WtaUI.toast(t('reportThanks'), { type: 'success' });
+        if (window.A2AUI) window.A2AUI.toast(t('reportThanks'), { type: 'success' });
         else alert(t('reportThanks'));
       }).catch(function () {
         btn.disabled = false;
-        if (window.WtaUI) window.WtaUI.toast(t('reportFailed'), { type: 'error' });
+        if (window.A2AUI) window.A2AUI.toast(t('reportFailed'), { type: 'error' });
         else alert(t('reportFailed'));
       });
     });
@@ -392,7 +392,7 @@
         pickedRating = 0;
         load();
       }).catch(function () {
-        if (window.WtaUI) window.WtaUI.toast(t('postFailed'), { type: 'error' });
+        if (window.A2AUI) window.A2AUI.toast(t('postFailed'), { type: 'error' });
         else alert(t('postFailed'));
       }).finally(function () {
         btn.disabled = false;
@@ -402,8 +402,8 @@
     if (list) list.addEventListener('click', function (e) {
       var b = e.target.closest('[data-del]');
       if (!b) return;
-      var asked = window.WtaUI
-        ? window.WtaUI.confirm(t('del') + '?', { danger: true })
+      var asked = window.A2AUI
+        ? window.A2AUI.confirm(t('del') + '?', { danger: true })
         : Promise.resolve(confirm(t('del') + '?'));
       asked.then(function (ok) {
         if (!ok) return;

@@ -1,21 +1,18 @@
 <div align="center">
 
-<img src="assets/site-logo.jpg" alt="WebToApp" width="120" height="120" style="border-radius: 24px;">
+<img src="assets/site-logo.jpg" alt="All2App" width="120" height="120" style="border-radius: 24px;">
 
-# WebToApp
+# All2App
 
 **Turn any website into an installable app — in seconds.**
 
 One link in, finished products out for **iPhone / iPad · Android · Windows · macOS · Linux** — plus a public app market, creator profiles, comments and ratings, all without sign-up.
 
-[![Live Demo](https://img.shields.io/badge/Live_Demo-shiaho.sbs-c97953?style=for-the-badge)](https://shiaho.sbs)
-[![CI](https://img.shields.io/badge/CI-pytest%20336-059669?style=for-the-badge)](https://github.com/shiaho777/WebToApp/actions)
+[![CI](https://img.shields.io/badge/CI-pytest%20336-059669?style=for-the-badge)](https://github.com/bigopeforce-bit/All2App/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-1e1914?style=for-the-badge)](LICENSE)
 [![Platforms](https://img.shields.io/badge/Platforms-5-736357?style=for-the-badge)](#what-you-get)
 
 **English** · [简体中文](docs/README.zh.md) · [日本語](docs/README.ja.md) · [العربية](docs/README.ar.md) · [Русский](docs/README.ru.md) · [Español](docs/README.es.md) · [Português](docs/README.pt.md) · [Français](docs/README.fr.md) · [Deutsch](docs/README.de.md)
-
-QQ group **947508787**
 
 </div>
 
@@ -26,8 +23,6 @@ QQ group **947508787**
 Enter a URL — or upload your own `.html` / `.zip` — and seconds later you get an installable result covering every major platform. Each artifact is a thin native shell pointing at your site, so packages are measured in **kilobytes, not megabytes**, and download almost instantly.
 
 Every generated app lives at its own download page `/a/<id>`: platform picks, a foldable "About this page" section the creator can fill with real content, and a community layer with comments and star ratings. Publish it as a public link and it also appears in the **app market** for everyone to find.
-
-Open source · Free · No sign-up. Try it live at **[shiaho.sbs](https://shiaho.sbs)**.
 
 ---
 
@@ -180,9 +175,9 @@ The image includes the Android build tools. See [docs/DEPLOY.md](docs/DEPLOY.md#
 In production it is common to run it under systemd, behind an Nginx reverse proxy:
 
 ```ini
-# /etc/systemd/system/webtoapp.service
+# /etc/systemd/system/all2app.service
 [Unit]
-Description=WebToApp
+Description=All2App
 After=network.target
 
 [Service]

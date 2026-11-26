@@ -64,7 +64,7 @@ def public_base_url() -> Optional[str]:
 def android_package_prefix() -> str:
     """Return the default Android package prefix."""
     prefix = os.environ.get("ANDROID_PACKAGE_PREFIX", "").strip().lower()
-    return prefix or "com.webtoapp"
+    return prefix or "com.all2app"
 
 
 def android_keystore_dir() -> str:

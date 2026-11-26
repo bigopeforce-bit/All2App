@@ -10,7 +10,7 @@ Pass --dry-run to preview without uploading or writing.
 
 Run on the server, where the R2_* env vars are loaded and generated/ lives:
 
-    set -a; . /www/wwwroot/web-to-app-7/webtoapp.env; set +a
+    set -a; . /www/wwwroot/web-to-app-7/all2app.env; set +a
     venv/bin/python -m server.scripts.backfill_r2
 """
 
@@ -41,7 +41,7 @@ def main() -> int:
 
     if not config.r2_configured():
         print("ERROR: R2 is not configured (R2_* env vars missing). Aborting.", file=sys.stderr)
-        print("Hint: set -a; . /www/wwwroot/web-to-app-7/webtoapp.env; set +a", file=sys.stderr)
+        print("Hint: set -a; . /www/wwwroot/web-to-app-7/all2app.env; set +a", file=sys.stderr)
         return 1
 
     print(f"R2 bucket   : {config.r2_bucket()}")

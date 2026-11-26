@@ -49,7 +49,7 @@ class BuildBudgetTests(unittest.TestCase):
     def _post(self, url="https://example.com", name="App"):
         return self.client.post(
             "/api/distill", json={"url": url, "name": name},
-            cookies={"webtoapp_device_fingerprint": self._fp},
+            cookies={"all2app_device_fingerprint": self._fp},
         )
 
     def test_global_hourly_budget_rejects_with_retry_after(self):
@@ -174,7 +174,7 @@ class DiskWatermarkTests(unittest.TestCase):
         with mock.patch.object(config, "generated_disk_budget_mb", return_value=1):
             resp = self.client.post(
                 "/api/distill", json={"url": "https://example.com"},
-                cookies={"webtoapp_device_fingerprint": fp},
+                cookies={"all2app_device_fingerprint": fp},
             )
         self.assertEqual(resp.status_code, 202)
 

@@ -1,10 +1,10 @@
 <div align="center">
 
-# WebToApp — 部署指南
+# All2App — 部署指南
 
 [English](DEPLOY.md) · **简体中文** · [日本語](DEPLOY.ja.md) · [العربية](DEPLOY.ar.md) · [Русский](DEPLOY.ru.md) · [Español](DEPLOY.es.md) · [Português](DEPLOY.pt.md) · [Français](DEPLOY.fr.md) · [Deutsch](DEPLOY.de.md)
 
-一步步把 WebToApp 部署到生产环境。
+一步步把 All2App 部署到生产环境。
 
 </div>
 
@@ -42,8 +42,8 @@
 ## 2. 获取代码
 
 ```bash
-git clone https://github.com/shiaho777/WebToApp.git
-cd WebToApp
+git clone https://github.com/bigopeforce-bit/All2App.git
+cd All2App
 ```
 
 ## 3. Python 环境
@@ -68,7 +68,7 @@ cp .env.example .env
 | 变量 | 用途 | 默认值 |
 | --- | --- | --- |
 | `PUBLIC_BASE_URL` | 公网地址，如 `https://app.example.com`。生产环境必填，否则 iPhone 会去打开 `localhost`。 | 从 Host 头推断 |
-| `ANDROID_PACKAGE_PREFIX` | 默认安卓包名前缀。 | `com.webtoapp` |
+| `ANDROID_PACKAGE_PREFIX` | 默认安卓包名前缀。 | `com.all2app` |
 | `ANDROID_KEYSTORE_DIR` | 每应用签名 keystore 的存放目录。务必放在任何公开路径之外。 | `certs/app-keys` |
 | `DAILY_BUILD_QUOTA` | 每设备每日构建上限（`0` 表示关闭）。 | `10` |
 | `IOS_CERT_FILE` / `IOS_KEY_FILE` / `IOS_CHAIN_FILE` | 用于签名 iOS 描述文件的公开 CA 证书。 | 未设置（不签名，仍可安装） |
@@ -99,7 +99,7 @@ docker compose up -d --build
 
 这些数据会留下来：
 
-- 卷 `webtoapp-generated` — 应用、历史和社区数据库
+- 卷 `all2app-generated` — 应用、历史和社区数据库
 - `./certs` — 每个应用自己的安卓密钥，以及可选的 iOS 证书（`ios-cert.pem`、`ios-key.pem`、`ios-chain.pem`）
 
 前面用 Nginx、Caddy 或面板反代到 8000 端口。容器默认信任内网地址发来的 `X-Forwarded-*`。如果反代不在内网地址上，在 `.env` 里设置 `DOCKER_TRUSTED_PROXY_CIDRS`。
@@ -122,22 +122,22 @@ docker compose up -d --build
 把密钥放在权限受限的环境文件里，而不是写在 unit 内联：
 
 ```bash
-# /path/to/WebToApp/webtoapp.env  （chmod 600）
+# /path/to/All2App/all2app.env  （chmod 600）
 PUBLIC_BASE_URL=https://your-domain.com
 # 按需在此添加 R2_* / IOS_* / CLOUDFLARE_*
 ```
 
 ```ini
-# /etc/systemd/system/webtoapp.service
+# /etc/systemd/system/all2app.service
 [Unit]
-Description=WebToApp
+Description=All2App
 After=network.target
 
 [Service]
 User=www-data
-WorkingDirectory=/path/to/WebToApp
-EnvironmentFile=/path/to/WebToApp/webtoapp.env
-ExecStart=/path/to/WebToApp/venv/bin/uvicorn server.main:app --host 127.0.0.1 --port 8000 --workers 1
+WorkingDirectory=/path/to/All2App
+EnvironmentFile=/path/to/All2App/all2app.env
+ExecStart=/path/to/All2App/venv/bin/uvicorn server.main:app --host 127.0.0.1 --port 8000 --workers 1
 Restart=always
 RestartSec=5
 
@@ -146,10 +146,10 @@ WantedBy=multi-user.target
 ```
 
 ```bash
-sudo chmod 600 /path/to/WebToApp/webtoapp.env
+sudo chmod 600 /path/to/All2App/all2app.env
 sudo systemctl daemon-reload
-sudo systemctl enable --now webtoapp
-sudo systemctl status webtoapp
+sudo systemctl enable --now all2app
+sudo systemctl status all2app
 ```
 
 > 保持 `--workers 1`。构建队列和内存限流器都假设单进程运行。
@@ -188,10 +188,10 @@ iOS Web Clip 和 `.mobileconfig` 描述文件必须走 HTTPS。两种常见方�
 
 ```bash
 cloudflared tunnel login
-cloudflared tunnel create webtoapp
+cloudflared tunnel create all2app
 # 把一个主机名路由到隧道，再指向 http://127.0.0.1:8000
-cloudflared tunnel route dns webtoapp your-domain.com
-cloudflared tunnel run webtoapp
+cloudflared tunnel route dns all2app your-domain.com
+cloudflared tunnel run all2app
 ```
 
 **方案 B — Nginx 上的 Let's Encrypt：**
@@ -267,15 +267,15 @@ python -m server.scripts.rebuild_android_apks --app-id abcd1234
 
 ### 配置步骤
 
-1. 在 Cloudflare 控制台打开 **R2**，创建一个桶，例如 `webtoapp-downloads`。
+1. 在 Cloudflare 控制台打开 **R2**，创建一个桶，例如 `all2app-downloads`。
 2. **Manage R2 API Tokens → Create API Token**，权限选 **Object Read & Write**。复制 **Access Key ID** 和 **Secret Access Key**（密钥只显示一次）。
 3. 把桶设为公开：桶 **Settings → Public access**。要么启用 **r2.dev** 开发地址（`https://pub-xxxx.r2.dev`）快速起步，要么添加 **自定义域名**（如 `files.example.com`）以额外获得边缘缓存。
    > 自定义域名必须属于**与桶同一个 Cloudflare 账号**所管理的域。
-4. 在 `webtoapp.env` 里设置这 5 个变量：
+4. 在 `all2app.env` 里设置这 5 个变量：
 
    ```bash
    R2_ACCOUNT_ID=...            # 你的账号 ID（hex）
-   R2_BUCKET=webtoapp-downloads
+   R2_BUCKET=all2app-downloads
    R2_ACCESS_KEY_ID=...
    R2_SECRET_ACCESS_KEY=...
    R2_PUBLIC_BASE_URL=https://pub-xxxx.r2.dev   # 或 https://files.example.com
@@ -289,7 +289,7 @@ python -m server.scripts.rebuild_android_apks --app-id abcd1234
 启用 R2 之前构建的应用仍指向本地文件。一次性把它们的产物上传到 R2 并更新 `downloads_cdn`：
 
 ```bash
-set -a; . ./webtoapp.env; set +a
+set -a; . ./all2app.env; set +a
 venv/bin/python -m server.scripts.backfill_r2 --dry-run   # 预览
 venv/bin/python -m server.scripts.backfill_r2             # 实际执行
 ```
@@ -302,7 +302,7 @@ venv/bin/python -m server.scripts.backfill_r2             # 实际执行
 git pull
 source venv/bin/activate
 pip install -r server/requirements.txt   # 若依赖有变化
-sudo systemctl restart webtoapp
+sudo systemctl restart all2app
 ```
 
 如果你改了前端资源（`css/`、`js/`），记得在 `index.html` 里把 `?v=` 版本号 bump 一下，让浏览器拉取新文件而非缓存。
@@ -315,7 +315,7 @@ sudo systemctl restart webtoapp
 | 安卓下载是 PWA zip 而非 APK | 服务器未安装 Android SDK / apktool（见 §9）。 |
 | 下载仍从源站发出 | 某个 `R2_*` 变量缺失，或设置后未重启。旧应用需跑回填（§11）。 |
 | iOS 描述文件显示"未验证" | 描述文件未签名。提供公开 CA 证书（§10）。 |
-| `502 Bad Gateway` | 服务未运行或端口不对——`systemctl status webtoapp`。 |
+| `502 Bad Gateway` | 服务未运行或端口不对——`systemctl status all2app`。 |
 | Docker 构建在下载 SDK 时失败 | 机器访问不了 `dl.google.com` 或 GitHub。改用 `WITH_ANDROID=0 docker compose up -d --build`，或等网络可用后再构建完整镜像。 |
 | 构建接口返回 `429` | 触发每设备每日配额或每 IP 限流。调整 `DAILY_BUILD_QUOTA`。 |
 

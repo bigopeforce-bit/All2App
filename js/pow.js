@@ -1,11 +1,11 @@
 /* ============================================================
-   WebToApp — invisible proof-of-work solver (#244).
+   All2App — invisible proof-of-work solver (#244).
    Fetches an adaptive-difficulty challenge from /api/pow/challenge
    and finds a nonce whose sha256(challenge:nonce) has the required
    leading zero bits. Runs in a dedicated Web Worker so the UI never
    janks; falls back to the main thread when Workers are unavailable.
    No captcha, no account, no interaction — at most a brief wait.
-   Exposes window.WtaPow.solve() -> {challenge, solution} or null.
+   Exposes window.A2APow.solve() -> {challenge, solution} or null.
    ============================================================ */
 (function () {
   'use strict';
@@ -158,5 +158,5 @@
     return { challenge: data.challenge, solution: solution };
   }
 
-  window.WtaPow = { solve: solve };
+  window.A2APow = { solve: solve };
 })();

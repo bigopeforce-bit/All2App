@@ -310,7 +310,7 @@ public class M extends Activity {
      * Returns true if the given host matches any blocked ad/tracker domain.
      * Checks direct match first (O(1)), then walks up the subdomain chain so
      * that e.g. "sub.doubleclick.net" is caught by the "doubleclick.net" entry.
-     * Also checks any extra hosts supplied at runtime via webtoapp_config.json.
+     * Also checks any extra hosts supplied at runtime via all2app_config.json.
      */
     private boolean isAdHost(String host) {
         if (host == null || host.isEmpty()) return false;
@@ -322,7 +322,7 @@ public class M extends Activity {
             if (AD_HOSTS.contains(parent)) return true;
             dot = lower.indexOf('.', dot + 1);
         }
-        // Check server-supplied extra hosts from webtoapp_config.json
+        // Check server-supplied extra hosts from all2app_config.json
         if (config != null && config.extraAdHosts.contains(lower)) return true;
         return false;
     }
@@ -396,7 +396,7 @@ public class M extends Activity {
         });
         webView.setWebChromeClient(new AppChromeClient());
         webView.setDownloadListener(new AppDownloadListener());
-        webView.addJavascriptInterface(new WebAppBridge(), "WebToApp");
+        webView.addJavascriptInterface(new WebAppBridge(), "All2App");
         WebSettings s = webView.getSettings();
         s.setJavaScriptEnabled(true);
         s.setDomStorageEnabled(true);
@@ -491,7 +491,7 @@ public class M extends Activity {
     private AppConfig loadConfig() {
         AppConfig loaded = new AppConfig();
         try {
-            InputStream input = getAssets().open("webtoapp_config.json");
+            InputStream input = getAssets().open("all2app_config.json");
             byte[] data = input.readAllBytes();
             input.close();
             JSONObject json = new JSONObject(new String(data, StandardCharsets.UTF_8));
@@ -694,7 +694,7 @@ public class M extends Activity {
             if (lower.startsWith("data:")) {
                 byte[] data = decodeDataUrl(url);
                 if (data == null) {
-                    Log.w("WebToApp", "data: download undecodable");
+                    Log.w("All2App", "data: download undecodable");
                     toastOnUi("导出失败，请重试");
                 } else {
                     String name = sanitizeFileSegment(URLUtil.guessFileName(url, contentDisposition, mimeType));
@@ -743,7 +743,7 @@ public class M extends Activity {
             );
             manager.enqueue(request);
         } catch (Throwable e) {
-            Log.w("WebToApp", "enqueueDownload failed: " + download.url, e);
+            Log.w("All2App", "enqueueDownload failed: " + download.url, e);
         }
     }
 
@@ -757,7 +757,7 @@ public class M extends Activity {
     }
 
     // ── In-page file export bridge (issue #37) ──────────────────────────
-    // Pages call window.WebToApp.saveFile(dataUrl, fileName, mimeType) to
+    // Pages call window.All2App.saveFile(dataUrl, fileName, mimeType) to
     // save generated content (CSV / PDF / …) into the public Downloads
     // folder, which file managers and the system Downloads app can browse.
     // There is intentionally NO window.android.* alias: that name belongs to
@@ -773,7 +773,7 @@ public class M extends Activity {
             final String mime = mimeType != null ? mimeType : "";
             if (data == null) {
                 toastOnUi("保存失败：文件内容无效");
-                Log.w("WebToApp", "saveFile: undecodable payload");
+                Log.w("All2App", "saveFile: undecodable payload");
                 return;
             }
             if (needsBridgeStoragePermission()) {
@@ -792,7 +792,7 @@ public class M extends Activity {
             saveBytesAsync(data, safeName, mime);
         }
         @JavascriptInterface public void onExportFailed(String message) {
-            Log.w("WebToApp", "page-side export failed: " + message);
+            Log.w("All2App", "page-side export failed: " + message);
             toastOnUi("导出失败，请重试");
         }
     }
@@ -811,10 +811,10 @@ public class M extends Activity {
         "(function(u,n,m){"
         + "fetch(u).then(function(r){return r.blob();}).then(function(b){"
         + "var f=new FileReader();"
-        + "f.onload=function(){try{WebToApp.saveFile(f.result,n,m);}catch(e){WebToApp.onExportFailed(String(e));}};"
-        + "f.onerror=function(){WebToApp.onExportFailed('read failed');};"
+        + "f.onload=function(){try{All2App.saveFile(f.result,n,m);}catch(e){All2App.onExportFailed(String(e));}};"
+        + "f.onerror=function(){All2App.onExportFailed('read failed');};"
         + "f.readAsDataURL(b);"
-        + "}).catch(function(e){WebToApp.onExportFailed(String(e));});"
+        + "}).catch(function(e){All2App.onExportFailed(String(e));});"
         + "})('";
     private static final String BLOB_FETCH_SEP = "','";
     private static final String BLOB_FETCH_SUFFIX = "');";
@@ -829,7 +829,7 @@ public class M extends Activity {
                         + BLOB_FETCH_SEP + jsSingleQuote(mimeType) + BLOB_FETCH_SUFFIX;
                     webView.evaluateJavascript(script, null);
                 } catch (Throwable e) {
-                    Log.w("WebToApp", "blob resolve failed", e);
+                    Log.w("All2App", "blob resolve failed", e);
                     toastOnUi("导出失败，请重试");
                 }
             }
@@ -857,7 +857,7 @@ public class M extends Activity {
             }
             return java.net.URLDecoder.decode(payload, "UTF-8").getBytes("UTF-8");
         } catch (Throwable e) {
-            Log.w("WebToApp", "decodeDataUrl failed", e);
+            Log.w("All2App", "decodeDataUrl failed", e);
             return null;
         }
     }
@@ -908,7 +908,7 @@ public class M extends Activity {
                 Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(target)));
             return true;
         } catch (Throwable e) {
-            Log.w("WebToApp", "writeDownloadFile failed", e);
+            Log.w("All2App", "writeDownloadFile failed", e);
             return false;
         }
     }
@@ -1098,7 +1098,7 @@ public class M extends Activity {
         String url = "about:blank";
         boolean immersiveFullscreen = false;
         boolean desktopMode = false;
-        // Extra ad hosts injected at build time via webtoapp_config.json.
+        // Extra ad hosts injected at build time via all2app_config.json.
         // Allows blocking site-specific ad domains without rebuilding the APK template.
         Set<String> extraAdHosts = new HashSet<>();
     }
@@ -1131,8 +1131,8 @@ MANIFEST_XML = """<?xml version="1.0" encoding="utf-8"?>
 
 
 class ApkBuilder:
-    TEMPLATE_PACKAGE = "com.webtoapp.template"
-    TEMPLATE_APP_NAME = "WebToApp Template"
+    TEMPLATE_PACKAGE = "com.all2app.template"
+    TEMPLATE_APP_NAME = "All2App Template"
     TEMPLATE_VERSION_CODE = 1
     TEMPLATE_VERSION_NAME = "1.0"
     # Human-readable prefix; the effective revision appends a content hash
@@ -1150,7 +1150,7 @@ class ApkBuilder:
         return f"{cls.TEMPLATE_REVISION}-{digest}"
     # Keystore used only to sign the throwaway base *template* APK. The template
     # is always re-signed per-app afterwards, so this key never reaches users.
-    TEMPLATE_KEY_ALIAS = "webtoapp"
+    TEMPLATE_KEY_ALIAS = "all2app"
     TEMPLATE_APK_NAME = "android-template.apk"
 
     def __init__(self):
@@ -1333,7 +1333,7 @@ class ApkBuilder:
 
             with zipfile.ZipFile(apk_unsigned, "a") as z:
                 z.write(dex_out / "classes.dex", "classes.dex")
-                z.writestr("assets/webtoapp_config.json", self._config_json("https://example.com", {}))
+                z.writestr("assets/all2app_config.json", self._config_json("https://example.com", {}))
 
             aligned = tmp / "app-aligned.apk"
             self._align_apk(apk_unsigned, aligned)
@@ -1377,7 +1377,7 @@ class ApkBuilder:
             keystore=keystore,
             password=password,
             alias=alias,
-            dname="CN=WebToApp Build Template,O=WebToApp,C=CN",
+            dname="CN=All2App Build Template,O=All2App,C=CN",
         )
         return keystore, password, alias
 
@@ -1446,7 +1446,7 @@ class ApkBuilder:
     @staticmethod
     def _random_cert_dname() -> str:
         """A neutral, randomized certificate subject. Avoids every generated
-        APK sharing an identical ``CN=WebToApp ...`` subject, which would be
+        APK sharing an identical ``CN=All2App ...`` subject, which would be
         another easy bulk-fingerprint signal for AV engines."""
         cn = "".join(secrets.choice("abcdefghijklmnopqrstuvwxyz0123456789") for _ in range(12))
         return f"CN={cn}"
@@ -1571,7 +1571,7 @@ class ApkBuilder:
         rewrite of three entries followed by re-alignment and re-signing:
 
         - AndroidManifest.xml: AXML string-pool edit + versionCode int patch
-        - assets/webtoapp_config.json: rewritten wholesale
+        - assets/all2app_config.json: rewritten wholesale
         - res/mipmap/ic_launcher.png: rewritten wholesale
 
         The template's stale v1 signature files are dropped; build_v1 writes
@@ -1589,7 +1589,7 @@ class ApkBuilder:
                     template_apk, pkg, version_code, version_name, name
                 ),
                 replacements={
-                    "assets/webtoapp_config.json": self._config_json(url, feature_options).encode("utf-8"),
+                    "assets/all2app_config.json": self._config_json(url, feature_options).encode("utf-8"),
                     **({"res/mipmap/ic_launcher.png": icon_png} if icon_png else {}),
                 },
             )
@@ -1618,7 +1618,7 @@ class ApkBuilder:
         carries these exact literal strings, so the patch is a constrained
         rewrite of the AXML string pool plus the versionCode attribute value:
 
-        - package="com.webtoapp.template"  ->  pkg
+        - package="com.all2app.template"  ->  pkg
         - label / versionName literal      ->  name / version_name
         - versionCode="1" int attribute    ->  version_code
         """
@@ -1808,7 +1808,7 @@ class ApkBuilder:
                 raw.get("feature-desktop-mode") or raw.get("feature_desktop_mode")
             ),
             # Extra ad hosts injected per-build by the server. Passed through to
-            # the APK's webtoapp_config.json asset and loaded at runtime by
+            # the APK's all2app_config.json asset and loaded at runtime by
             # AppConfig so site-specific domains can be blocked without a
             # template rebuild.
             "extra_ad_hosts": list(raw.get("extra_ad_hosts") or []),

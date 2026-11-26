@@ -58,7 +58,7 @@ class ReportAndTakedownTests(unittest.TestCase):
         main.history_store.record_build(self.FP, recipe, f"/a/{app_id}", None)
 
     def _cookies(self):
-        return {"webtoapp_device_fingerprint": self.FP}
+        return {"all2app_device_fingerprint": self.FP}
 
     def test_report_requires_reason_and_existing_app(self):
         self.assertEqual(

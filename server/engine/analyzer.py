@@ -336,7 +336,7 @@ class SiteAnalyzer:
             return self._trim_app_name(clean_site_name), (site_name_source or "site_name")
 
         if not clean_title:
-            return self._trim_app_name(host_label or host or "WebToApp"), "host_fallback"
+            return self._trim_app_name(host_label or host or "All2App"), "host_fallback"
 
         parts = self._split_title_parts(clean_title)
         host_matches = [part for part in parts if self._part_matches_host(part, host_label)]
